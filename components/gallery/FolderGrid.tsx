@@ -7,6 +7,8 @@ interface FolderGridProps {
 }
 
 export default function FolderGrid({ folders }: FolderGridProps) {
+  if (folders.length === 0) return null;
+
   return (
     <div className="mt-10 sm:mt-14 md:mt-16">
       <h3 className="text-2xl sm:text-3xl mb-4 sm:mb-6">folders</h3>

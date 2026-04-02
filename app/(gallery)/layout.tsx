@@ -4,7 +4,7 @@ import { fetchGalleryData, toOgImage } from "@/lib/gallery";
 
 export async function generateMetadata(): Promise<Metadata> {
   const data = await fetchGalleryData();
-  const firstSrc = data?.general.find((i) => i.type === "image")?.src;
+  const firstSrc = data.general.find((i) => i.type === "image")?.src;
   const ogImage = firstSrc ? toOgImage(firstSrc) : null;
   const description =
     "a collection of my personal photos and videos from various adventures.";

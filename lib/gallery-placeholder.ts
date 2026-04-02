@@ -13,6 +13,12 @@ export function getLqipUrl(
   try {
     const url = new URL(src);
 
+    // Picsum seed URLs: same path with tiny dimensions for blur placeholder
+    if (url.hostname === "picsum.photos" && src.includes("/seed/")) {
+      const lqip = src.replace(/\/(\d+)\/(\d+)$/, "/20/20");
+      return { type: "lqip", url: lqip };
+    }
+
     // Google Photos: append =w20 for a tiny thumbnail
     if (url.hostname === GOOGLE_PHOTOS_HOST) {
       // Strip any existing size param and append tiny width

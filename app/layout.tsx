@@ -7,7 +7,7 @@ import ChatBubble from "@/components/home/chat-bubble";
 import { siteMetadata, siteConfig } from "@/config/siteConfig";
 import { Analytics } from "@vercel/analytics/react";
 import { PostHogProvider, PostHogPageView } from "@posthog/next";
-import { Suspense } from "react";
+import { Suspense, type ReactNode } from "react";
 import { user } from "@/data/general";
 import { experiences } from "@/data/experience";
 import { Providers } from "@/providers";
@@ -31,6 +31,14 @@ const instrumentSerif = Instrument_Serif({
 });
 
 export const metadata: Metadata = siteMetadata;
+
+/**
+ * PostHog is optional for forks: set NEXT_PUBLIC_POSTHOG_KEY in `.env.local` when you want analytics.
+ * If unset or empty, the app runs without PostHog (no @posthog/next apiKey error).
+ */
+function isPostHogEnabled(): boolean {
+  return Boolean(process.env.NEXT_PUBLIC_POSTHOG_KEY?.trim());
+}
 
 export default function RootLayout({
   children,
@@ -61,6 +69,25 @@ export default function RootLayout({
     },
   };
 
+  const posthogEnabled = isPostHogEnabled();
+
+  // Shared UI tree; PostHogProvider only wraps this when a project API key is set.
+  const appContent: ReactNode = (
+    <Providers>
+      {posthogEnabled && (
+        <Suspense fallback={null}>
+          <PostHogPageView />
+        </Suspense>
+      )}
+      <Navbar />
+      {children}
+      <Footer />
+      <Terminal />
+      {/* <ChatBubble /> */}
+      <Analytics />
+    </Providers>
+  );
+
   return (
     <html lang="en" suppressHydrationWarning>
       <head>
@@ -70,19 +97,15 @@ export default function RootLayout({
         />
       </head>
       <body className={`${hubotSans.variable} ${bodoni.variable} ${instrumentSerif.variable} antialiased`}>
-        <PostHogProvider clientOptions={{ api_host: "/ingest", custom_campaign_params: ["ref"] }}>
-          <Providers>
-            <Suspense fallback={null}>
-              <PostHogPageView />
-            </Suspense>
-            <Navbar />
-            {children}
-            <Footer />
-            <Terminal />
-            {/* <ChatBubble /> */}
-            <Analytics />
-          </Providers>
-        </PostHogProvider>
+        {posthogEnabled ? (
+          <PostHogProvider
+            clientOptions={{ api_host: "/ingest", custom_campaign_params: ["ref"] }}
+          >
+            {appContent}
+          </PostHogProvider>
+        ) : (
+          appContent
+        )}
       </body>
     </html>
   );

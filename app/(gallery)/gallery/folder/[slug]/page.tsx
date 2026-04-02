@@ -17,7 +17,7 @@ export async function generateMetadata({
 }: FolderPageProps): Promise<Metadata> {
   const { slug } = await params;
   const data = await fetchGalleryData();
-  const folder = data?.folders[slug];
+  const folder = data.folders[slug];
   if (!folder) return {};
 
   const title = `${folder.name} | gallery`;
@@ -53,8 +53,6 @@ export async function generateMetadata({
 export default async function FolderPage({ params }: FolderPageProps) {
   const { slug } = await params;
   const galleryData = await fetchGalleryData();
-  if (!galleryData) notFound();
-
   const folder = galleryData.folders[slug];
 
   if (!folder) {
@@ -87,7 +85,5 @@ export default async function FolderPage({ params }: FolderPageProps) {
 
 export async function generateStaticParams() {
   const galleryData = await fetchGalleryData();
-  if (!galleryData) return [];
-
   return Object.keys(galleryData.folders).map((slug) => ({ slug }));
 }
