@@ -27,36 +27,46 @@ export const experiences = [
       },
     ],
   },
+  // {
+  //   id: 2,
+  //   company: "resimator",
+  //   website: "https://staging.resimator.fi/",
+  //   stacks: [
+  //     "next.js",
+  //     "tailwind",
+  //     "graphql",
+  //     "strapi",
+  //     "framer motion",
+  //     "ant design",
+  //   ],
+  //   roles: [
+  //     {
+  //       title: "frontend engineer",
+  //       period: "march 2024 - october 2024",
+  //       type: "contract, remote",
+  //       description:
+  //         "converted UI designs to NextJS/Tailwind implementations. maintained POS/Kiosk app and CMS for restaurant management. developed webshop using NextJS, Tailwind, Framer, and Ant Design. integrated Strapi and GraphQL for CMS functionality.",
+  //     },
+  //   ],
+  // },
   {
-    id: 1,
-    company: "consultancy",
-    website: "",
+    id: 3,
+    company: "a5it",
+    website: "https://a5it.com/",
     stacks: [
       "aws",
       "digitalocean",
       "node.js",
       "express",
       "next.js",
-      "react query",
-      "graphql",
-      "strapi",
-      "framer motion",
-      "ant design",
     ],
     roles: [
       {
-        title: "software engineer, a5it",
+        title: "software engineer",
         period: "february 2024 - november 2024",
-        type: "consulting",
+        type: "full time, remote",
         description:
           "reduced AWS costs by 57% through infrastructure optimization. migrated services from AWS to DigitalOcean. built ETL pipelines and CRUD APIs. contributed to main website and product development. managed various cloud services including S3, RDS, EC2, ECS, SES, and SQS.",
-      },
-      {
-        title: "frontend engineer, resimator",
-        period: "march 2024 - october 2024",
-        type: "consulting",
-        description:
-          "converted UI designs to NextJS/Tailwind implementations. maintained POS/Kiosk app and CMS for restaurant management. developed webshop using NextJS, Tailwind, Framer, and Ant Design. integrated Strapi and GraphQL for CMS functionality.",
       },
     ],
   },

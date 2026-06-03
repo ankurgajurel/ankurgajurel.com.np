@@ -59,28 +59,45 @@ export default function Navbar() {
   ];
 
   return (
-    <nav className="container mx-auto flex flex-col md:flex-row items-start md:items-center md:justify-between space-y-3 md:space-y-0 space-x-0 md:space-x-2 p-4">
-      <div className="flex flex-row items-center gap-3 md:gap-10 flex-wrap">
-        <div className="flex items-center gap-3 md:gap-5 lg:gap-10">
-          {navItems
-            .filter((item) => !item.icon)
-            .map((item) => (
-              <NavItem key={item.label} {...item} />
-            ))}
-        </div>
-        <div className="flex flex-wrap items-center gap-2">
-          {navItems
-            .filter((item) => item.icon)
-            .map((item) => {
-              const Icon = item.icon!;
-              const isExternal = !item.link.startsWith("/");
-              if (isExternal) {
+    <nav className="sticky top-0 z-40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/80">
+      <div className="container mx-auto flex flex-col md:flex-row items-start md:items-center md:justify-between space-y-3 md:space-y-0 space-x-0 md:space-x-2 p-4">
+        <div className="flex flex-row items-center gap-3 md:gap-10 flex-wrap">
+          <div className="flex items-center gap-3 md:gap-5 lg:gap-10">
+            {navItems
+              .filter((item) => !item.icon)
+              .map((item) => (
+                <NavItem key={item.label} {...item} />
+              ))}
+          </div>
+          <div className="flex flex-wrap items-center gap-2">
+            {navItems
+              .filter((item) => item.icon)
+              .map((item) => {
+                const Icon = item.icon!;
+                const isExternal = !item.link.startsWith("/");
+                if (isExternal) {
+                  return (
+                    <a
+                      key={item.label}
+                      href={item.link}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      aria-label={item.label}
+                      title={item.label}
+                      className="group inline-flex items-center justify-center p-1 rounded hover:opacity-80 transition-opacity"
+                    >
+                      <Icon
+                        size={18}
+                        className="transition-colors duration-200 group-hover:[&_path]:fill-current"
+                        aria-hidden="true"
+                      />
+                    </a>
+                  );
+                }
                 return (
-                  <a
+                  <Link
                     key={item.label}
                     href={item.link}
-                    target="_blank"
-                    rel="noopener noreferrer"
                     aria-label={item.label}
                     title={item.label}
                     className="group inline-flex items-center justify-center p-1 rounded hover:opacity-80 transition-opacity"
@@ -90,36 +107,21 @@ export default function Navbar() {
                       className="transition-colors duration-200 group-hover:[&_path]:fill-current"
                       aria-hidden="true"
                     />
-                  </a>
+                  </Link>
                 );
-              }
-              return (
-                <Link
-                  key={item.label}
-                  href={item.link}
-                  aria-label={item.label}
-                  title={item.label}
-                  className="group inline-flex items-center justify-center p-1 rounded hover:opacity-80 transition-opacity"
-                >
-                  <Icon
-                    size={18}
-                    className="transition-colors duration-200 group-hover:[&_path]:fill-current"
-                    aria-hidden="true"
-                  />
-                </Link>
-              );
-            })}
+              })}
+          </div>
         </div>
-      </div>
-      <div className="gap-4 space-x-2 flex items-center">
-        <ThemeToggle />
-        <Button
-          variant="default"
-          className="uppercase text-xs cursor-pointer"
-          onClick={() => setIsVisible(!isVisible)}
-        >
-          console
-        </Button>
+        <div className="gap-4 space-x-2 flex items-center">
+          <ThemeToggle />
+          <Button
+            variant="default"
+            className="uppercase text-xs cursor-pointer"
+            onClick={() => setIsVisible(!isVisible)}
+          >
+            console
+          </Button>
+        </div>
       </div>
     </nav>
   );

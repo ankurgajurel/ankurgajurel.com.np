@@ -6,6 +6,8 @@ import VideoPlayer from "@/components/gallery/VideoPlayer";
 import GalleryImage from "@/components/gallery/GalleryImage";
 import { getVideoPosterUrl } from "@/lib/gallery-placeholder";
 import type { GalleryMedia } from "@/lib/gallery";
+import { siteConfig } from "@/config/siteConfig";
+import { user } from "@/data/general";
 
 interface GalleryMasonryProps {
   items: GalleryMedia[];
@@ -39,7 +41,7 @@ export default function GalleryMasonry({
         scroll: false,
       });
     },
-    [searchParams, router, pathname]
+    [searchParams, router, pathname],
   );
 
   const openModal = useCallback(
@@ -48,7 +50,7 @@ export default function GalleryMasonry({
       if (!item) return;
       setModalQuery(`${item.type}-${item.id}`);
     },
-    [items, setModalQuery]
+    [items, setModalQuery],
   );
 
   const closeModal = useCallback(() => setModalQuery(null), [setModalQuery]);
@@ -115,12 +117,12 @@ export default function GalleryMasonry({
         goToNext();
       }
     },
-    [goToPrev, goToNext]
+    [goToPrev, goToNext],
   );
 
   const tweetUrl = useMemo(() => {
     if (!activeItem) return "#";
-    const text = `${activeItem.caption}\n\n${activeItem.src}`;
+    const text = `${activeItem.caption}\n\n${activeItem.src}\n\nfrom: ${siteConfig.url}\n\nby: @${user.genericUsername}`;
     return `https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}`;
   }, [activeItem]);
 

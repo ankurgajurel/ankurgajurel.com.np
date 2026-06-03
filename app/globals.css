@@ -124,7 +124,7 @@
 
 
 .container {
-    @apply max-w-6xl mx-auto;
+    @apply max-w-5xl mx-auto;
 }
 
 .table-border {
@@ -135,3 +135,20 @@
     @apply border-b border-foreground/15;
 }
 
+.animated-underline {
+    @apply relative inline-block no-underline;
+}
+
+.animated-underline::after {
+    content: "";
+    @apply absolute left-0 w-full bg-current transition-transform duration-300 ease-out;
+    bottom: 0.02em;
+    height: 0.06em;
+    transform: scaleX(0);
+    transform-origin: left;
+}
+
+.group:hover .animated-underline::after,
+.animated-underline:hover::after {
+    transform: scaleX(1);
+}

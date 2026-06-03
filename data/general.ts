@@ -1,5 +1,6 @@
 export const user = {
   name: "ankur gajurel",
+  avatar: "https://avatars.githubusercontent.com/u/66795857?v=4",
   location: "bhaktapur, nepal",
   timezone: "Asia/Kathmandu",
   postalCode: "44600",
@@ -22,6 +23,7 @@ export const user = {
     mail: "mailto:ankurgajurel02@gmail.com",
     calcom: "https://cal.com/gajurel",
   },
+  genericUsername: "ankurgajurel",
   playlist: "1YODNPvuFFJtpgvyxZnxYG",
   hobbies: ["hiking", "travelling", "music", "guitar/piano", "coffee"],
 };

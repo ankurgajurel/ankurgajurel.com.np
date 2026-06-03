@@ -6,7 +6,7 @@ export default function SpotifyEmbed() {
     <div id="musik" className="container p-4 flex flex-col gap-10 my-10">
       <div>
         <h2 className="text-6xl flex gap-2 items-end group">
-          <span className="group-hover:underline">musik</span>
+          <span>musik</span>
           <ArrowUp
             size={48}
             className="group-hover:rotate-45 transition-transform duration-300"

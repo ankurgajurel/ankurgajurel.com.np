@@ -1,47 +1,30 @@
 import { ArrowUp } from "lucide-react";
 import Link from "next/link";
 import { user } from "@/data/general";
-import { cn } from "@/lib/utils";
+import Image from "next/image";
 
 export default function Hero() {
   return (
     <section className="p-4 container my-10 md:my-16 lg:my-20">
       <div className="flex flex-col gap-8">
-        <div className="flex flex-col gap-2">
-          <div className="relative w-fit">
-            <h2 className="text-6xl md:text-8xl font-instrument-serif">{user.name}</h2>
-            <a
-              href={user.openForWork ? user.socials.calcom : "#"}
-              target={user.openForWork ? "_blank" : undefined}
-            >
-              <p
-                className={cn(
-                  "hidden md:block absolute -right-16 top-[50%] bottom-[50%] rotate-90 hover:underline text-xs",
-                  !user.openForWork && "line-through"
-                )}
-              >
-                open for work
-              </p>
-            </a>
-            <div className="md:hidden flex items-baseline justify-between w-full mt-2">
-              <p className="text-xl font-normal">
-                {user.hero.subtitle}
-              </p>
-              <a
-                href={user.openForWork ? user.socials.calcom : "#"}
-                target={user.openForWork ? "_blank" : undefined}
-                className={cn(
-                  "text-xs hover:underline",
-                  !user.openForWork && "line-through"
-                )}
-              >
-                (open for work)
-              </a>
-            </div>
+        <div className="flex items-center gap-4 md:gap-5">
+          <a href={user.socials.twitter} target="_blank">
+            <Image
+              src={user.avatar}
+              alt={user.name}
+              width={96}
+              height={96}
+              className="size-20 md:size-24 shrink-0 rounded-[4px] border border-foreground/10 object-cover hover:shadow-md transition-shadow duration-300 cursor-pointer"
+            />
+          </a>
+          <div className="flex min-w-0 flex-col items-start gap-1">
+            <h2 className="text-4xl md:text-6xl font-instrument-serif leading-none">
+              {user.name}
+            </h2>
+            <p className="text-lg md:text-2xl font-bodoni font-extralight leading-none tracking-tighter">
+              {user.hero.subtitle}
+            </p>
           </div>
-          <p className="hidden md:block text-xl md:text-4xl font-bodoni font-extralight tracking-tighter">
-            {user.hero.subtitle}
-          </p>
         </div>
 
         <div className="pr-5 md:pr-0 md:max-w-3/5">
@@ -49,13 +32,12 @@ export default function Hero() {
             {user.hero.userExcerpt}
           </p>
         </div>
-
         <div className="flex flex-wrap gap-4">
           <Link
             href="/#projects"
-            className="group flex items-center gap-2 text-lg hover:underline"
+            className="group flex items-center gap-2 text-lg"
           >
-            <span>view projects</span>
+            <span className="animated-underline">view projects</span>
             <ArrowUp
               size={20}
               className="group-hover:rotate-45 transition-transform duration-300"
@@ -63,25 +45,17 @@ export default function Hero() {
           </Link>
           <Link
             href="/#blogs"
-            className="group flex items-center gap-2 text-lg hover:underline"
+            className="group flex items-center gap-2 text-lg"
           >
-            <span>writes</span>
+            <span className="animated-underline">writes</span>
             <ArrowUp
               size={20}
               className="group-hover:rotate-45 transition-transform duration-300"
             />
           </Link>
-          <a
-            href={user.socials.calcom}
-            target="_blank"
-            className="group flex items-center gap-2 text-lg hover:underline"
-          >
-            <span>book a call</span>
-            <ArrowUp
-              size={20}
-              className="group-hover:rotate-45 transition-transform duration-300"
-            />
-          </a>
+          <Link href={user.socials.calcom} target="_blank" className="group flex items-center gap-2 text-lg">
+            <span className="animated-underline">(open for work)</span>
+          </Link>
         </div>
       </div>
     </section>
