@@ -28,10 +28,8 @@ export default function HomeUtilities() {
 
           {utilities.map((utility) => (
             <div key={utility.id}>
-              <a
+              <Link
                 href={utility.url}
-                target="_blank"
-                rel="noopener noreferrer"
                 className="table-border grid grid-cols-4 p-2 group hover:bg-card transition-colors duration-200 font-light cursor-pointer block"
               >
                 <div className="text-sm">{utility.name}</div>
@@ -45,7 +43,7 @@ export default function HomeUtilities() {
                     className="group-hover:rotate-45 transition-transform duration-300 text-foreground"
                   />
                 </div>
-              </a>
+              </Link>
             </div>
           ))}
         </div>
@@ -54,11 +52,9 @@ export default function HomeUtilities() {
       {/* Mobile cards */}
       <div className="flex flex-col gap-0 md:hidden">
         {utilities.map((utility) => (
-          <a
+          <Link
             key={utility.id}
             href={utility.url}
-            target="_blank"
-            rel="noopener noreferrer"
             className="table-border py-3 group font-light block"
           >
             <div className="flex items-baseline justify-between mb-1">
@@ -66,7 +62,7 @@ export default function HomeUtilities() {
               <span className="text-xs text-foreground/50">{utility.language}</span>
             </div>
             <p className="text-sm text-foreground/70">{utility.description}</p>
-          </a>
+          </Link>
         ))}
       </div>
     </section>

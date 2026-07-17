@@ -52,7 +52,7 @@ export default function Navbar() {
     { label: "home", link: "/" },
     { label: "gallery", link: "/gallery" },
     { label: "resume", link: "/resume/resume.pdf" },
-    { label: "tools", link: user.toolsWebsite },
+    { label: "tools", link: "/tools" },
     { label: "cal.com", link: user.socials.calcom },
     { label: "twitter", link: user.socials.twitter, icon: Twitter },
     { label: "github", link: user.socials.github, icon: Github },
