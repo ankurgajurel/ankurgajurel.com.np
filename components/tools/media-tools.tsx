@@ -8,7 +8,12 @@ import {
   useRef,
   useState,
 } from "react";
-import { Download, Eraser, ImageIcon, MousePointer2, PenLine, Upload } from "lucide-react";
+import { DownloadSimpleIcon as Download } from "@phosphor-icons/react/dist/ssr/DownloadSimple";
+import { EraserIcon as Eraser } from "@phosphor-icons/react/dist/ssr/Eraser";
+import { ImageIcon as ImageIcon } from "@phosphor-icons/react/dist/ssr/Image";
+import { CursorIcon as MousePointer2 } from "@phosphor-icons/react/dist/ssr/Cursor";
+import { PenNibIcon as PenLine } from "@phosphor-icons/react/dist/ssr/PenNib";
+import { UploadSimpleIcon as Upload } from "@phosphor-icons/react/dist/ssr/UploadSimple";
 import { cn } from "@/lib/utils";
 import {
   ToolPanel,

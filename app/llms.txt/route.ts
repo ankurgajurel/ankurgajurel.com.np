@@ -2,24 +2,47 @@ import { siteConfig } from "@/config/siteConfig";
 import { getAllPostsMeta } from "@/lib/blog";
 import { projects } from "@/data/projects";
 import { user } from "@/data/general";
+import { seoProfile } from "@/data/seo";
+import { projectDescription, projectKeywords } from "@/lib/seo";
 
 export function GET() {
   const posts = getAllPostsMeta();
 
-  const content = `# ${user.name}
+  const content = `# ${user.legalName}
 
 > ${siteConfig.description}
 
+Last updated: ${siteConfig.updatedAt}
+
+## Preferred Summary
+
+${seoProfile.longDescription}
+
 ## About
 
-${user.hero.userExcerpt}
+${user.hero.bio.join("\n\n")}
 
 - Location: ${user.location}
 - Role: ${user.role}
 - Website: ${siteConfig.url}
+- Availability: open to remote engineering, freelance engineering, contract work, and full-time remote product engineering
+
+## Best-Matching Queries
+
+${seoProfile.targetQueries.map((query) => `- ${query}`).join("\n")}
+
+## Services
+
+${seoProfile.services.map((service) => `- ${service.title}: ${service.description}`).join("\n")}
+
+## Specialties
+
+${seoProfile.specialties.map((specialty) => `- ${specialty}`).join("\n")}
 
 ## Links
 
+- Full AI context: ${siteConfig.url}/llms-full.txt
+- Resume: ${siteConfig.url}/resume/resume.pdf
 - LinkedIn: ${user.socials.linkedin}
 - GitHub: ${user.socials.github}
 - Twitter: ${user.socials.twitter}
@@ -32,7 +55,12 @@ ${posts.map((post) => `- [${post.title}](${siteConfig.url}/blog/${post.id}): ${p
 
 ## Projects
 
-${projects.map((p) => `- [${p.name}](${siteConfig.url}/projects/${p.id}): ${p.content || p.description || ""}`).join("\n")}
+${projects
+  .map(
+    (project) =>
+      `- [${project.name}](${siteConfig.url}/projects/${project.id}): ${projectDescription(project)} Keywords: ${projectKeywords(project).join(", ")}.`
+  )
+  .join("\n")}
 
 ## Gallery
 
@@ -41,7 +69,7 @@ ${projects.map((p) => `- [${p.name}](${siteConfig.url}/projects/${p.id}): ${p.co
 
   return new Response(content, {
     headers: {
-      "Content-Type": "text/plain; charset=utf-8",
+      "Content-Type": "text/markdown; charset=utf-8",
     },
   });
 }

@@ -1,9 +1,12 @@
 import { user } from "@/data/general";
-import { ArrowUp } from "lucide-react";
+import { ArrowUpIcon as ArrowUp } from "@phosphor-icons/react/dist/ssr/ArrowUp";
 
 export default function SpotifyEmbed() {
   return (
-    <div id="musik" className="container p-4 flex flex-col gap-10 my-10">
+    <div
+      id="musik"
+      className="mx-auto max-w-5xl p-4 flex flex-col gap-10 my-10"
+    >
       <div>
         <h2 className="text-6xl flex gap-2 items-end group">
           <span>musik</span>

@@ -1,128 +1,74 @@
 "use client";
 
 import Link from "next/link";
-import Button from "./ui/button";
+import { usePathname } from "next/navigation";
+import { TerminalWindowIcon } from "@phosphor-icons/react/dist/ssr/TerminalWindow";
 import { useConsoleVisibleStore } from "@/store/console";
-import { useState, type ComponentType } from "react";
-import { user } from "@/data/general";
-import { Github, Twitter } from "lucide-react";
 import { ThemeToggle } from "./theme-toggle";
-import { AnimatePresence, motion } from "framer-motion";
 
-const NavItem = ({ label, link }: { label: string; link: string }) => {
-  const isExternal = !link.startsWith("/");
-  const Component = isExternal ? "a" : Link;
-  const props = isExternal ? { href: link, target: "_blank" } : { href: link };
-  const [isHovered, setIsHovered] = useState(false);
-
-  return (
-    <Component
-      {...props}
-      className="block relative w-fit overflow-hidden"
-      onMouseEnter={() => setIsHovered(true)}
-      onMouseLeave={() => setIsHovered(false)}
-    >
-      <AnimatePresence mode="wait">
-        <motion.span
-          key={isHovered ? "hover" : "default"}
-          initial={{ y: 20, opacity: 0 }}
-          animate={{ y: 0, opacity: 1 }}
-          exit={{ y: -20, opacity: 0 }}
-          transition={{ duration: 0.2 }}
-          className="block absolute top-0 left-0"
-        >
-          {isHovered ? "→" : label}
-        </motion.span>
-      </AnimatePresence>
-      <span className="block opacity-0">{label}</span>
-    </Component>
-  );
-};
-
-type NavItemEntry = {
-  label: string;
-  link: string;
-  icon?: ComponentType<{ size?: number; className?: string }>;
-};
+const links = [
+  { label: "home", href: "/" },
+  { label: "projects", href: "/projects" },
+  { label: "writing", href: "/blog" },
+  { label: "gallery", href: "/gallery" },
+  { label: "tools", href: "/tools" },
+];
 
 export default function Navbar() {
+  const pathname = usePathname();
   const { isVisible, setIsVisible } = useConsoleVisibleStore();
-
-  const navItems: NavItemEntry[] = [
-    { label: "home", link: "/" },
-    { label: "gallery", link: "/gallery" },
-    { label: "resume", link: "/resume/resume.pdf" },
-    { label: "tools", link: "/tools" },
-    { label: "cal.com", link: user.socials.calcom },
-    { label: "twitter", link: user.socials.twitter, icon: Twitter },
-    { label: "github", link: user.socials.github, icon: Github },
-  ];
-
   return (
-    <nav className="sticky top-0 z-40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/80">
-      <div className="container mx-auto flex flex-col md:flex-row items-start md:items-center md:justify-between space-y-3 md:space-y-0 space-x-0 md:space-x-2 p-4">
-        <div className="flex flex-row items-center gap-3 md:gap-10 flex-wrap">
-          <div className="flex items-center gap-3 md:gap-5 lg:gap-10">
-            {navItems
-              .filter((item) => !item.icon)
-              .map((item) => (
-                <NavItem key={item.label} {...item} />
-              ))}
-          </div>
-          <div className="flex flex-wrap items-center gap-2">
-            {navItems
-              .filter((item) => item.icon)
-              .map((item) => {
-                const Icon = item.icon!;
-                const isExternal = !item.link.startsWith("/");
-                if (isExternal) {
-                  return (
-                    <a
-                      key={item.label}
-                      href={item.link}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      aria-label={item.label}
-                      title={item.label}
-                      className="group inline-flex items-center justify-center p-1 rounded hover:opacity-80 transition-opacity"
-                    >
-                      <Icon
-                        size={18}
-                        className="transition-colors duration-200 group-hover:[&_path]:fill-current"
-                        aria-hidden="true"
-                      />
-                    </a>
-                  );
-                }
-                return (
-                  <Link
-                    key={item.label}
-                    href={item.link}
-                    aria-label={item.label}
-                    title={item.label}
-                    className="group inline-flex items-center justify-center p-1 rounded hover:opacity-80 transition-opacity"
-                  >
-                    <Icon
-                      size={18}
-                      className="transition-colors duration-200 group-hover:[&_path]:fill-current"
-                      aria-hidden="true"
-                    />
-                  </Link>
-                );
-              })}
-          </div>
-        </div>
-        <div className="gap-4 space-x-2 flex items-center">
-          <ThemeToggle />
-          <Button
-            variant="default"
-            className="uppercase text-xs cursor-pointer"
-            onClick={() => setIsVisible(!isVisible)}
+    <>
+      <a
+        href="#main-content"
+        className="fixed -top-15 left-4 z-100 rounded-[10px] bg-foreground px-4 py-2.5 text-background focus:top-3"
+      >
+        skip to content
+      </a>
+      <header className="sticky top-0 z-40 shrink-0 bg-background/88 backdrop-blur-[16px]">
+        <div className="m-auto flex min-h-[82px] w-[min(800px,calc(100%-40px))] items-center gap-[42px] [@media(max-width:640px)]:grid [@media(max-width:640px)]:grid-cols-[1fr_auto] [@media(max-width:640px)]:gap-0 [@media(max-width:640px)]:pt-[9px]">
+          <Link
+            href="/"
+            className="py-1.5 pr-1 text-[22px] font-[550] tracking-[-0.08em] [&_span]:text-muted-foreground [@media(max-width:640px)]:w-fit"
+            aria-label="ankur gajurel — home"
           >
-            console
-          </Button>
+            ag<span>.</span>
+          </Link>
+          <nav
+            className="flex items-center gap-[25px] [@media(max-width:640px)]:col-span-full [@media(max-width:640px)]:row-start-2 [@media(max-width:640px)]:justify-between [@media(max-width:640px)]:gap-4"
+            aria-label="main navigation"
+          >
+            {links.map(({ label, href }) => {
+              const active =
+                href === "/"
+                  ? pathname === "/" || pathname === "/demo"
+                  : pathname.startsWith(href);
+              return (
+                <Link
+                  key={href}
+                  href={href}
+                  aria-current={active ? "page" : undefined}
+                  className="relative py-3.5 text-[14px] leading-[1.4] text-muted-foreground transition-[color] duration-160 ease-[ease] after:absolute after:bottom-3.5 after:left-0 after:h-px after:w-full after:origin-left after:scale-x-0 after:bg-underline after:transition-transform after:duration-200 after:ease-portfolio after:content-[''] aria-[current=page]:text-foreground aria-[current=page]:after:scale-x-100 pointer-fine:hover:text-foreground pointer-fine:hover:after:scale-x-100 [@media(max-width:640px)]:pt-2.5 [@media(max-width:640px)]:pb-[15px] [@media(max-width:640px)]:after:bottom-[15px]"
+                >
+                  {label}
+                </Link>
+              );
+            })}
+          </nav>
+          <div className="ml-auto flex gap-1 [@media(max-width:640px)]:col-start-2 [@media(max-width:640px)]:row-start-1">
+            <ThemeToggle />
+            <button
+              className="inline-flex size-[34px] items-center justify-center rounded-full text-secondary-foreground [corner-shape:round] transition-[background,transform,scale] duration-160 ease-[ease,var(--ease),var(--ease)] aria-pressed:bg-card active:scale-[0.94] pointer-fine:hover:bg-card"
+              onClick={() => setIsVisible(!isVisible)}
+              aria-label={isVisible ? "close console" : "open console"}
+              aria-pressed={isVisible}
+              title="console"
+            >
+              <TerminalWindowIcon size={18} weight="light" aria-hidden="true" />
+            </button>
+          </div>
         </div>
-      </div>
-    </nav>
+      </header>
+    </>
   );
 }

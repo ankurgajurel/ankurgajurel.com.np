@@ -1,13 +1,14 @@
 import { user } from "@/data/general";
 import { Metadata } from "next";
+import { seoProfile } from "@/data/seo";
 
 export const siteConfig = {
-  name: user.name,
-  title: user.name + " - " + user.role,
-  description:
-    "Software engineer specializing in full-stack web development, AWS cloud infrastructure, and social media analytics. Building scalable applications with React, Next.js, and TypeScript.",
+  name: user.legalName,
+  title: `${user.legalName} - Remote Full-Stack Engineer in Nepal`,
+  description: seoProfile.shortDescription,
   url: "https://ankurgajurel.com.np",
   ogImage: "/og.png",
+  updatedAt: seoProfile.updatedAt,
   links: {
     twitter: "https://twitter.com/ankurgajurel",
     github: "https://github.com/ankurgajurel",
@@ -16,27 +17,21 @@ export const siteConfig = {
   creator: "@ankurgajurel",
   authors: [
     {
-      name: "Ankur Gajurel",
+      name: user.legalName,
       url: "https://ankurgajurel.com.np",
     },
   ],
   keywords: [
-    "Ankur Gajurel",
-    "Software Engineer",
-    "Full Stack Developer",
-    "Web Developer",
-    "Frontend Developer",
-    "Backend Developer",
-    "AWS",
-    "Cloud Infrastructure",
-    "Social Media Analytics",
+    user.legalName,
+    ...seoProfile.targetQueries,
+    ...seoProfile.specialties,
     "React",
     "Next.js",
     "TypeScript",
     "JavaScript",
     "Node.js",
-    "Web Applications",
-    "Scalable Applications",
+    "Python",
+    "AWS",
   ],
 };
 

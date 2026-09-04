@@ -1,43 +1,55 @@
-import { skills } from "@/data/skills";
+import Image from "next/image";
+import { skillIcons, skills } from "@/data/skills";
 
 export default function HomeSkills() {
   return (
-    <section className="container p-4 flex flex-col gap-10 my-10">
-      <div>
-        <h2 className="text-6xl">skills</h2>
+    <section
+      id="skills"
+      className="mt-15 scroll-mt-25 [@media(max-width:640px)]:mt-11"
+      aria-labelledby="skills-title"
+    >
+      <div className="mb-[18px] flex items-baseline justify-between gap-4 [&_h2]:text-[15px] [&_h2]:font-[450] [&_h2]:text-secondary-foreground [&_h2_span]:ml-2 [&_h2_span]:text-[12px] [&_h2_span]:text-muted-foreground [&_h2_span]:tabular-nums">
+        <h2 id="skills-title">what i work with</h2>
       </div>
-
-      {/* Desktop table */}
-      <div className="hidden md:block">
-        <div className="flex flex-col gap-0">
-          <div className="table-border-header grid grid-cols-4 p-1 text-xs">
-            <div>/ CATEGORY</div>
-            <div className="col-span-3">/ TOOLS</div>
-          </div>
-
-          {skills.map((skill) => (
-            <div
-              key={skill.id}
-              className="table-border grid grid-cols-4 px-1 py-2 font-light"
-            >
-              <div className="text-sm">{skill.title}</div>
-              <div className="col-span-3 text-sm">
-                {skill.items.join(", ")}
-              </div>
-            </div>
-          ))}
-        </div>
-      </div>
-
-      {/* Mobile cards */}
-      <div className="flex flex-col gap-4 md:hidden">
-        {skills.map((skill) => (
-          <div key={skill.id} className="table-border pb-4 font-light">
-            <div className="text-xs text-foreground/50 mb-1">/ {skill.title.toUpperCase()}</div>
-            <div className="text-sm">{skill.items.join(", ")}</div>
-          </div>
-        ))}
-      </div>
+      <ul className="grid grid-cols-10 gap-3 [@media(max-width:640px)]:grid-cols-5 [@media(max-width:640px)]:gap-2.5 [@media(max-width:640px)]:[&>li:nth-child(5n+1)_[data-tooltip]]:left-0 [@media(max-width:640px)]:[&>li:nth-child(5n+1)_[data-tooltip]]:translate-x-0 [@media(max-width:640px)]:[&>li:nth-child(5n)_[data-tooltip]]:left-auto [@media(max-width:640px)]:[&>li:nth-child(5n)_[data-tooltip]]:right-0 [@media(max-width:640px)]:[&>li:nth-child(5n)_[data-tooltip]]:translate-x-0">
+        {skills
+          .flatMap((skill) => skill.items)
+          .map((name) => {
+            const technology = skillIcons[name];
+            return (
+              <li key={name}>
+                <a
+                  className="group/skill relative flex h-13 w-full items-center justify-center rounded-[17px] bg-card [corner-shape:squircle] transition-[background-color] duration-160 ease-[ease] [&_img]:object-contain pointer-fine:hover:bg-border"
+                  href={technology.url}
+                  target="_blank"
+                  rel="noreferrer"
+                  aria-label={name}
+                >
+                  <Image
+                    src={`/icons/technologies/${technology.icon}.svg`}
+                    width={28}
+                    height={28}
+                    alt=""
+                    className={
+                      "invert" in technology
+                        ? "dark:invert"
+                        : "monochrome" in technology
+                          ? "dark:brightness-0 dark:invert"
+                          : undefined
+                    }
+                  />
+                  <span
+                    className="invisible pointer-events-none absolute bottom-[calc(100%+8px)] left-1/2 z-2 -translate-x-1/2 rounded-[8px] bg-foreground px-[9px] py-[5px] text-[12px] leading-[1.4] whitespace-nowrap text-background group-focus-visible/skill:visible pointer-fine:group-hover/skill:visible"
+                    data-tooltip
+                    aria-hidden="true"
+                  >
+                    {name.toLowerCase()}
+                  </span>
+                </a>
+              </li>
+            );
+          })}
+      </ul>
     </section>
   );
 }

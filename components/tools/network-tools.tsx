@@ -1,7 +1,9 @@
 "use client";
 
 import { type FormEvent, useEffect, useState } from "react";
-import { Copy, ExternalLink, Search } from "lucide-react";
+import { CopySimpleIcon as Copy } from "@phosphor-icons/react/dist/ssr/CopySimple";
+import { ArrowSquareOutIcon as ExternalLink } from "@phosphor-icons/react/dist/ssr/ArrowSquareOut";
+import { MagnifyingGlassIcon as Search } from "@phosphor-icons/react/dist/ssr/MagnifyingGlass";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import type { OpenGraphData } from "@/lib/tools/network";
 import { ToolButton } from "@/components/tools/tool-button";
@@ -12,7 +14,7 @@ function display(value: unknown) { if (Array.isArray(value)) return value.join("
 
 function LinkPreview({ name, data }: { name: string; data: OpenGraphData }) {
   const image = data.twitterImage?.[0] ?? data.ogImage?.[0]; const title = data.twitterTitle ?? data.ogTitle ?? data.title ?? "Untitled page"; const description = data.twitterDescription ?? data.ogDescription ?? data.description ?? "No description found."; const url = data.ogUrl ?? data.canonical ?? "";
-  return <article className="overflow-hidden border border-foreground/10 bg-background"><div className="border-b border-foreground/10 px-3 py-2 text-xs uppercase tracking-wide text-foreground/60">{name}</div>{image ? <img src={image} alt="Open graph preview" className="aspect-[2/1] w-full object-cover" /> : <div className="aspect-[2/1] bg-card" />}<div className="space-y-1 p-3"><p className="truncate text-xs text-foreground/55">{url}</p><h3 className="line-clamp-1 font-medium">{title}</h3><p className="line-clamp-2 text-sm text-foreground/65">{description}</p></div></article>;
+  return <article className="overflow-hidden border border-foreground/10 bg-background"><div className="border-b border-foreground/10 px-3 py-2 text-xs lowercase text-foreground/60">{name}</div>{image ? <img src={image} alt="Open graph preview" className="aspect-[2/1] w-full object-cover" /> : <div className="aspect-[2/1] bg-card" />}<div className="space-y-1 p-3"><p className="truncate text-xs text-foreground/55">{url}</p><h3 className="line-clamp-1 font-medium">{title}</h3><p className="line-clamp-2 text-sm text-foreground/65">{description}</p></div></article>;
 }
 
 export function OpenGraphInspector() {

@@ -5,6 +5,7 @@ import { projects } from "@/data/projects";
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const baseUrl = siteConfig.url;
+  const updatedAt = new Date(siteConfig.updatedAt);
 
   const blogPosts = getAllPostsMeta().map((post) => ({
     url: `${baseUrl}/blog/${post.id}`,
@@ -15,7 +16,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
 
   const projectPages = projects.map((project) => ({
     url: `${baseUrl}/projects/${project.id}`,
-    lastModified: new Date(),
+    lastModified: updatedAt,
     changeFrequency: "monthly" as const,
     priority: 0.6,
   }));
@@ -23,16 +24,22 @@ export default function sitemap(): MetadataRoute.Sitemap {
   return [
     {
       url: baseUrl,
-      lastModified: new Date(),
+      lastModified: updatedAt,
       changeFrequency: "weekly",
       priority: 1,
     },
     {
       url: `${baseUrl}/gallery`,
-      lastModified: new Date(),
+      lastModified: updatedAt,
       changeFrequency: "weekly",
       priority: 0.8,
     },
+    ...["projects", "blog", "tools"].map((path) => ({
+      url: `${baseUrl}/${path}`,
+      lastModified: updatedAt,
+      changeFrequency: "monthly" as const,
+      priority: 0.8,
+    })),
     ...blogPosts,
     ...projectPages,
   ];

@@ -1,103 +1,34 @@
-"use client";
-
-import { useState, useRef, useEffect } from "react";
-import { cn } from "@/lib/utils";
-
 interface ContributionDay {
   contributionCount: number;
   contributionLevel: string;
   date: string;
 }
-
-const levelClass: Record<string, string> = {
-  NONE: "bg-[#d0d7de] dark:bg-[#161b22]",
-  FIRST_QUARTILE: "bg-[#9be9a8] dark:bg-[#0e4429]",
-  SECOND_QUARTILE: "bg-[#40c463] dark:bg-[#006d32]",
-  THIRD_QUARTILE: "bg-[#30a14e] dark:bg-[#26a641]",
-  FOURTH_QUARTILE: "bg-[#216e39] dark:bg-[#39d353]",
+const levels: Record<string, number> = {
+  NONE: 0,
+  FIRST_QUARTILE: 1,
+  SECOND_QUARTILE: 2,
+  THIRD_QUARTILE: 3,
+  FOURTH_QUARTILE: 4,
 };
 
 export function GithubCalendarGrid({ weeks }: { weeks: ContributionDay[][] }) {
-  const [tooltip, setTooltip] = useState<{
-    text: string;
-    x: number;
-    y: number;
-  } | null>(null);
-  const containerRef = useRef<HTMLDivElement>(null);
-  const gridRef = useRef<HTMLDivElement>(null);
-  const [scale, setScale] = useState(1);
-  const [gridHeight, setGridHeight] = useState<number | undefined>(undefined);
-
-  useEffect(() => {
-    const updateScale = () => {
-      if (containerRef.current && gridRef.current) {
-        const containerWidth = containerRef.current.offsetWidth;
-        gridRef.current.style.transform = "scale(1)";
-        const gridWidth = gridRef.current.scrollWidth;
-        const naturalHeight = gridRef.current.scrollHeight;
-        const newScale = Math.min(1, containerWidth / gridWidth);
-        gridRef.current.style.transform = `scale(${newScale})`;
-        setScale(newScale);
-        setGridHeight(naturalHeight * newScale);
-      }
-    };
-    updateScale();
-    window.addEventListener("resize", updateScale);
-    return () => window.removeEventListener("resize", updateScale);
-  }, [weeks]);
-
   return (
-    <>
-      {tooltip && (
-        <div
-          className="fixed z-[9999] pointer-events-none px-2 py-1 bg-foreground text-background text-xs whitespace-nowrap"
-          style={{
-            left: tooltip.x,
-            top: tooltip.y - 32,
-            transform: "translateX(-50%)",
-          }}
-        >
-          {tooltip.text}
-        </div>
-      )}
-
-      <div
-        ref={containerRef}
-        className="w-full overflow-hidden"
-        style={{ height: gridHeight }}
-        onMouseLeave={() => setTooltip(null)}
-      >
-        <div
-          className="flex gap-[3px]"
-          ref={gridRef}
-          style={{
-            transform: `scale(${scale})`,
-            transformOrigin: "top left",
-          }}
-        >
-          {weeks.map((week, weekIndex) => (
-            <div key={weekIndex} className="flex flex-col gap-[3px]">
-              {week.map((day) => (
-                <div
-                  key={day.date}
-                  className={cn(
-                    "w-[10px] h-[10px] md:w-[13px] md:h-[13px] rounded-[2px] transition-colors duration-100",
-                    levelClass[day.contributionLevel] || levelClass.NONE
-                  )}
-                  onMouseEnter={(e) => {
-                    const rect = e.currentTarget.getBoundingClientRect();
-                    setTooltip({
-                      text: `${day.contributionCount} contributions on ${day.date}`,
-                      x: rect.left + rect.width / 2,
-                      y: rect.top,
-                    });
-                  }}
-                />
-              ))}
-            </div>
+    <div
+      className="flex w-full gap-[3px] [&>div]:flex [&>div]:min-w-0 [&>div]:flex-1 [&>div]:flex-col [&>div]:gap-[3px] [&_span]:aspect-square [&_span]:rounded-[2px] [&_span]:bg-border [@media(max-width:640px)]:gap-0.5 [@media(max-width:640px)]:[&>div]:gap-0.5 [&_[data-level='1']]:bg-[#c5d7ca] dark:[&_[data-level='1']]:bg-[#293f30] [&_[data-level='2']]:bg-[#9fbea9] dark:[&_[data-level='2']]:bg-[#3d6149] [&_[data-level='3']]:bg-[#739c83] dark:[&_[data-level='3']]:bg-[#628770] [&_[data-level='4']]:bg-[#4c775e] dark:[&_[data-level='4']]:bg-[#92b19b]"
+      role="img"
+      aria-label="github contributions over the last year; darker squares represent more contributions"
+    >
+      {weeks.map((week, index) => (
+        <div key={index}>
+          {week.map((day) => (
+            <span
+              key={day.date}
+              data-level={levels[day.contributionLevel] || 0}
+              title={`${day.contributionCount} contributions on ${day.date}`}
+            />
           ))}
         </div>
-      </div>
-    </>
+      ))}
+    </div>
   );
 }

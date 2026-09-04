@@ -1,63 +1,65 @@
-import { ArrowUp } from "lucide-react";
-import Link from "next/link";
+import HeroAvatar from "@/components/portfolio/hero-avatar";
+import HeroBio from "@/components/portfolio/hero-bio";
 import { user } from "@/data/general";
-import Image from "next/image";
 
 export default function Hero() {
   return (
-    <section className="p-4 container my-10 md:my-16 lg:my-20">
-      <div className="flex flex-col gap-8">
-        <div className="flex items-center gap-4 md:gap-5">
-          <a href={user.socials.twitter} target="_blank">
-            <Image
-              src={user.avatar}
-              alt={user.name}
-              width={96}
-              height={96}
-              className="size-20 md:size-24 shrink-0 rounded-[4px] border border-foreground/10 object-cover hover:shadow-md transition-shadow duration-300 cursor-pointer"
-            />
-          </a>
-          <div className="flex min-w-0 flex-col items-start gap-1">
-            <h2 className="text-4xl md:text-6xl font-instrument-serif leading-none">
-              {user.name}
-            </h2>
-            <p className="text-lg md:text-2xl font-bodoni font-extralight leading-none tracking-tighter">
-              {user.hero.subtitle}
-            </p>
-          </div>
-        </div>
-
-        <div className="pr-5 md:pr-0 md:max-w-3/5">
-          <p className="text-lg md:text-xl font-light leading-relaxed">
-            {user.hero.userExcerpt}
+    <section className="p-0" aria-labelledby="intro-title">
+      <div className="flex items-start gap-[18px]">
+        <HeroAvatar src={user.avatar} name={user.name} />
+        <div>
+          <h1
+            id="intro-title"
+            className="text-[22px] font-medium leading-[1.4]"
+          >
+            {user.name}
+          </h1>
+          <p className="text-[16px] leading-[1.6] text-muted-foreground">
+            {user.hero.subtitle}
+          </p>
+          <p className="text-[15px] leading-[1.6] text-muted-foreground">
+            {user.location}
           </p>
         </div>
-        <div className="flex flex-wrap gap-4">
-          <Link
-            href="/#projects"
-            className="group flex items-center gap-2 text-lg"
-          >
-            <span className="animated-underline">view projects</span>
-            <ArrowUp
-              size={20}
-              className="group-hover:rotate-45 transition-transform duration-300"
-            />
-          </Link>
-          <Link
-            href="/#blogs"
-            className="group flex items-center gap-2 text-lg"
-          >
-            <span className="animated-underline">writes</span>
-            <ArrowUp
-              size={20}
-              className="group-hover:rotate-45 transition-transform duration-300"
-            />
-          </Link>
-          <Link href={user.socials.calcom} target="_blank" className="group flex items-center gap-2 text-lg">
-            <span className="animated-underline">(open for work)</span>
-          </Link>
-        </div>
       </div>
+      <HeroBio paragraphs={user.hero.bio}>
+        <p>
+          thanks for stopping by! i&apos;m open to{" "}
+          <span className="font-semibold">
+            freelance work, full-time opportunities, collaborations, and
+            interesting projects
+          </span>
+          . feel free to{" "}
+          <a
+            href="#projects"
+            className="text-foreground underline decoration-underline decoration-1 underline-offset-[3px] [overflow-wrap:anywhere] transition-[text-decoration-color] duration-180 ease-[ease] pointer-fine:hover:decoration-foreground/45"
+          >
+            check out my work
+          </a>{" "}
+          or reach me at{" "}
+          <a
+            href={user.socials.mail}
+            className="text-foreground underline decoration-underline decoration-1 underline-offset-[3px] [overflow-wrap:anywhere] transition-[text-decoration-color] duration-180 ease-[ease] pointer-fine:hover:decoration-foreground/45"
+          >
+            {user.socials.mail.replace(/^mailto:/, "")}
+          </a>
+          .
+        </p>
+      </HeroBio>
+
+      {user.openForWork && (
+        <div className="mt-6 flex flex-wrap items-center gap-4 text-[14px]">
+          <a
+            className="ml-0 inline-flex items-center gap-[7px] text-[13px] text-muted-foreground transition-[color] duration-180 ease-[ease] [&_i]:size-[5px] [&_i]:rounded-full [&_i]:bg-[#69937a] pointer-fine:hover:text-secondary-foreground"
+            href={user.socials.twitter}
+            target="_blank"
+            rel="noreferrer"
+          >
+            <i aria-hidden="true" />
+            open for work
+          </a>
+        </div>
+      )}
     </section>
   );
 }

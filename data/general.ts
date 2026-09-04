@@ -1,5 +1,6 @@
 export const user = {
   name: "ankur gajurel",
+  legalName: "Ankur Gajurel",
   avatar: "https://avatars.githubusercontent.com/u/66795857?v=4",
   location: "bhaktapur, nepal",
   timezone: "Asia/Kathmandu",
@@ -10,8 +11,14 @@ export const user = {
   hero: {
     title: "",
     subtitle: "software engineer",
-    userExcerpt:
-      "i build things. from web apps to ai products. currently working with rag, voice ai, and video generation.",
+    bio: [
+      "hello, नमस्कार",
+      "tldr; i'm a curious builder who learned software development by building things, breaking them, and figuring out how to put them back together.",
+      "i don't tie myself to a particular stack. i usually reach for whatever language, framework, or tool makes the most sense for the problem. along the way, i've worked on saas platforms, ai-powered applications, internal tools, cloud infrastructure, and more unfinished side projects than i'd like to admit.",
+      "outside of work, i enjoy travelling, going on hikes, and getting away from screens whenever i can. music is a big part of my life too. i also pick up the guitar from time to time, although i probably spend more time listening than playing.",
+      "i also enjoy reading about how products are designed, built, and scaled. lately, i've been focused on strengthening my fundamentals and understanding what happens underneath the abstractions i use every day.",
+      "at the end of the day, i like creating useful software, solving interesting problems, and watching something grow from a rough idea into a product people can actually use.",
+    ],
   },
   footer: {
     subtitle: "software engineer",

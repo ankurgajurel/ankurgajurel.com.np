@@ -1,7 +1,8 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import { Calculator, ArrowLeftRight } from "lucide-react";
+import { CalculatorIcon as Calculator } from "@phosphor-icons/react/dist/ssr/Calculator";
+import { ArrowsLeftRightIcon as ArrowLeftRight } from "@phosphor-icons/react/dist/ssr/ArrowsLeftRight";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { calculateNepalTax, type CurrencyRates, type TaxStatus } from "@/lib/tools/forex";
 import { ToolButton } from "@/components/tools/tool-button";

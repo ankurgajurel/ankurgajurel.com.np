@@ -26,9 +26,9 @@ export function ToolButton({
     <button
       type={type}
       className={cn(
-        "inline-flex min-h-9 items-center justify-center gap-2 px-3 py-2 text-sm transition-colors disabled:pointer-events-none disabled:opacity-45",
+        "inline-flex min-h-9 items-center justify-center gap-2 rounded-xl px-3 py-2 text-xs transition-[color,background-color,transform] active:scale-[.98] focus-visible:outline-2 focus-visible:outline-offset-4 disabled:pointer-events-none disabled:opacity-45",
         variants[variant],
-        className
+        className,
       )}
       {...props}
     >

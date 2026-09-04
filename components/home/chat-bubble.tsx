@@ -2,7 +2,9 @@
 
 import { useState, useRef, useEffect } from "react";
 import { motion } from "framer-motion";
-import { MessageSquare, Send, X } from "lucide-react";
+import { ChatTextIcon as MessageSquare } from "@phosphor-icons/react/dist/ssr/ChatText";
+import { PaperPlaneTiltIcon as Send } from "@phosphor-icons/react/dist/ssr/PaperPlaneTilt";
+import { XIcon as X } from "@phosphor-icons/react/dist/ssr/X";
 import Button from "@/components/ui/button";
 import { useChat } from "@ai-sdk/react";
 import { Message } from "ai";
@@ -37,9 +39,7 @@ export default function ChatBubble() {
         onClick={() => setIsOpen(!isOpen)}
         className="p-4 shadow-2xl hover:shadow-3xl hover:scale-110 transition-all duration-300 bg-primary"
       >
-        <MessageSquare
-          className="text-primary-foreground transition-transform duration-300 text-3xl"
-        />
+        <MessageSquare className="text-primary-foreground transition-transform duration-300 text-3xl" />
       </motion.button>
 
       {isOpen && (
@@ -59,9 +59,7 @@ export default function ChatBubble() {
               onClick={() => setIsOpen(false)}
               className="p-2 transition-all duration-200 hover:rotate-90"
             >
-              <X 
-              className="text-primary-foreground"
-              size={18} />
+              <X className="text-primary-foreground" size={18} />
             </Button>
           </div>
           <div className="p-6 flex-1 flex flex-col justify-between gap-4">
@@ -101,14 +99,8 @@ export default function ChatBubble() {
                 >
                   <div className="flex items-center gap-2">
                     <div className="w-2 h-2 bg-primary animate-bounce"></div>
-                    <div
-                      className="w-2 h-2 bg-primary animate-bounce"
-                      style={{ animationDelay: "0.1s" }}
-                    ></div>
-                    <div
-                      className="w-2 h-2 bg-primary animate-bounce"
-                      style={{ animationDelay: "0.2s" }}
-                    ></div>
+                    <div className="w-2 h-2 bg-primary animate-bounce [animation-delay:0.1s]"></div>
+                    <div className="w-2 h-2 bg-primary animate-bounce [animation-delay:0.2s]"></div>
                     <span className="ml-2">Thinking...</span>
                   </div>
                 </motion.div>

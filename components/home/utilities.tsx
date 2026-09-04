@@ -1,55 +1,32 @@
-import { ArrowUp } from "lucide-react";
 import Link from "next/link";
+import { ArrowRightIcon } from "@phosphor-icons/react/dist/ssr/ArrowRight";
 import { utilities } from "@/data/utilities";
+import UtilityCard from "@/components/portfolio/utility-card";
 
 export default function HomeUtilities() {
-  const isExternal = (url: string) => !url.startsWith("/");
-
   return (
-    <section id="utilities" className="container p-4 flex flex-col gap-10 my-10">
-      <div>
-        <Link href={"/#utilities"}>
-          <h2 className="text-6xl flex gap-2 items-end group">
-            <span>utilities</span>
-            <ArrowUp
-              size={48}
-              className="group-hover:rotate-45 transition-transform duration-300"
-            />
-          </h2>
+    <section
+      id="utilities"
+      className="mt-15 scroll-mt-25 [@media(max-width:640px)]:mt-11"
+      aria-labelledby="utilities-title"
+    >
+      <div className="mb-[18px] flex items-baseline justify-between gap-4 [&_h2]:text-[15px] [&_h2]:font-[450] [&_h2]:text-secondary-foreground [&_h2_span]:ml-2 [&_h2_span]:text-[12px] [&_h2_span]:text-muted-foreground [&_h2_span]:tabular-nums">
+        <h2 id="utilities-title">
+          little utilities
+          <span>{String(utilities.length).padStart(2, "0")}</span>
+        </h2>
+        <Link
+          href="/tools"
+          className="relative inline-flex w-fit items-center gap-1.5 text-[14px]! text-secondary-foreground! after:absolute after:-bottom-px after:left-0 after:right-5 after:h-px after:origin-left after:scale-x-0 after:bg-underline after:transition-transform after:duration-[220ms] after:ease-portfolio after:content-[''] [&_svg]:transition-transform [&_svg]:duration-[220ms] [&_svg]:ease-portfolio pointer-fine:hover:after:scale-x-100 pointer-fine:hover:[&_svg]:translate-x-0.5 motion-reduce:[&_svg]:translate-none"
+        >
+          all tools
+          <ArrowRightIcon size={14} />
         </Link>
       </div>
-
-      {/* Desktop table */}
-      <div className="hidden md:block">
-        <div className="flex flex-col gap-0">
-          <div className="table-border-header grid grid-cols-4 p-1 text-xs">
-            <div>/ NAME</div>
-            <div className="col-span-2">/ DESCRIPTION</div>
-            <div>/ LANGUAGE</div>
-          </div>
-
-          {utilities.map((utility) => {
-            const content = <>
-              <div className="text-sm">{utility.name}</div>
-              <div className="col-span-2 text-sm">{utility.description}</div>
-              <div className="flex items-center justify-between">
-                <span className="text-sm text-foreground">{utility.language}</span>
-                <ArrowUp size={20} className="group-hover:rotate-45 transition-transform duration-300 text-foreground" />
-              </div>
-            </>;
-            const className = "table-border grid grid-cols-4 p-2 group hover:bg-card transition-colors duration-200 font-light cursor-pointer block";
-            return <div key={utility.id}>{isExternal(utility.url) ? <a href={utility.url} target="_blank" rel="noopener noreferrer" className={className}>{content}</a> : <Link href={utility.url} className={className}>{content}</Link>}</div>;
-          })}
-        </div>
-      </div>
-
-      {/* Mobile cards */}
-      <div className="flex flex-col gap-0 md:hidden">
-        {utilities.map((utility) => {
-          const content = <><div className="flex items-baseline justify-between mb-1"><span className="text-sm font-medium">{utility.name}</span><span className="text-xs text-foreground/50">{utility.language}</span></div><p className="text-sm text-foreground/70">{utility.description}</p></>;
-          const className = "table-border py-3 group font-light block";
-          return isExternal(utility.url) ? <a key={utility.id} href={utility.url} target="_blank" rel="noopener noreferrer" className={className}>{content}</a> : <Link key={utility.id} href={utility.url} className={className}>{content}</Link>;
-        })}
+      <div className="grid grid-cols-3 gap-2.5 [@media(max-width:640px)]:grid-cols-2 [@media(max-width:390px)]:gap-2">
+        {utilities.map((utility) => (
+          <UtilityCard key={utility.id} utility={utility} />
+        ))}
       </div>
     </section>
   );

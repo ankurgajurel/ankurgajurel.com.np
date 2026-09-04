@@ -1,61 +1,44 @@
-import { ArrowUp } from "lucide-react";
-import { Project } from "@/data/projects";
-import { useRouter } from "next/navigation";
+import Link from "next/link";
+import { ArrowUpRightIcon } from "@phosphor-icons/react/dist/ssr/ArrowUpRight";
+import { type Project } from "@/data/projects";
+import SiteMark from "@/components/portfolio/site-mark";
 
-export default function HomeProjectCard({
-  project,
-}: {
-  project: Project;
-}) {
-  const router = useRouter();
-
+export default function ProjectCard({ project }: { project: Project }) {
+  const url =
+    project.type === "sdk"
+      ? project.links?.github
+      : project.links?.demo || project.links?.github;
   return (
-    <div
-      className={`grid grid-cols-5 px-3 group transition-colors duration-200 font-light cursor-pointer ${
-        project.featured
-          ? "border-l-2 border-l-foreground bg-foreground/[0.03] py-2.5 hover:bg-foreground/[0.06]"
-          : "table-border py-1.5 hover:bg-card"
-      }`}
-      onClick={() => router.push("/projects/" + project.id)}
-      role="button"
-      tabIndex={0}
-      onKeyDown={(e) => {
-        if (e.key === "Enter" || e.key === " ")
-          router.push("/projects/" + project.id);
-      }}
+    <Link
+      href={project.blogHref || `/projects/${project.id}`}
+      className="group/card relative flex min-w-0 flex-col border border-transparent bg-card [corner-shape:squircle] transition-[box-shadow,border-color,transform,translate,scale] duration-[220ms] ease-[var(--ease),ease,var(--ease),var(--ease),var(--ease)] pointer-fine:hover:border-border pointer-fine:hover:shadow-portfolio pointer-fine:hover:-translate-y-px active:scale-[0.985] motion-reduce:translate-none! motion-reduce:scale-none! min-h-[211px] rounded-[26px] p-[22px] [&_h3]:mb-1.5 [&_h3]:text-[15px] [&_h3]:font-medium [&_h3]:leading-[1.5] [&_p]:max-w-70 [&_p]:pb-[21px] [&_p]:text-[14px] [&_p]:leading-[1.7] [&_p]:text-secondary-foreground [@media(max-width:640px)]:min-h-[222px] [@media(max-width:640px)]:p-[17px]"
+      target={
+        project.blogHref && project.blogHref.startsWith("https://")
+          ? "_blank"
+          : undefined
+      }
     >
-      <div className="text-sm">{project.date}</div>
-      <div className="col-span-2 text-sm flex items-center gap-2">
-        <span className={project.featured ? "font-normal" : ""}>
-          {project.name}
+      <div className="mb-[18px] flex items-center justify-between">
+        <span className="inline-flex size-9 items-center justify-center rounded-[12px] bg-popover shadow-[0_3px_3px_-3px_#0000000a] [corner-shape:squircle]">
+          <SiteMark url={url} name={project.name} />
         </span>
-        {project.featured && (
-          <span className="text-[0.6rem] tracking-widest uppercase text-foreground/40 border border-foreground/15 px-1.5 py-px">
-            new
-          </span>
-        )}
-      </div>
-      <div className="flex flex-wrap gap-2">
-        {project.collabs.map((collab) => (
-          <a
-            key={collab}
-            href={`https://github.com/${collab}`}
-            target="_blank"
-            rel="noopener noreferrer"
-            onClick={(e) => e.stopPropagation()}
-            className="text-sm text-foreground hover:text-blue-600 transition-colors duration-200 flex items-center gap-1 group/collab"
-          >
-            @{project.collabs.length > 1 ? collab.slice(0, 5) + "..." : collab}
-          </a>
-        ))}
-      </div>
-      <div className="grid grid-cols-2 items-center">
-        <div className="text-sm text-foreground">{project.type}</div>
-        <ArrowUp
-          size={14}
-          className="group-hover:rotate-45 transition-transform duration-300 text-foreground hidden md:block"
+        <ArrowUpRightIcon
+          className="shrink-0 text-muted-foreground opacity-65 transition-[transform,translate,opacity] duration-[220ms] ease-[var(--ease),var(--ease),ease] pointer-fine:group-hover/card:translate-x-0.5 pointer-fine:group-hover/card:-translate-y-0.5 pointer-fine:group-hover/card:opacity-100 motion-reduce:translate-none!"
+          size={17}
+          aria-hidden="true"
         />
       </div>
-    </div>
+      <h3>{project.name}</h3>
+      <p>
+        {project.summary ||
+          project.description ||
+          project.content ||
+          project.type}
+      </p>
+      <div className="mt-auto flex items-center justify-between gap-1.5 text-[12px] text-muted-foreground [@media(max-width:640px)]:flex-wrap">
+        <span>{project.type}</span>
+        <span>{project.date.replace(",", "")}</span>
+      </div>
+    </Link>
   );
 }

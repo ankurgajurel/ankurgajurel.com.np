@@ -4,8 +4,10 @@ export type Project = {
   collabs: string[];
   type: string;
   date: string;
+  blogHref?: string;
   hidePreview?: boolean;
   featured?: boolean;
+  summary?: string;
   description?: string;
   content?: string;
   links?: {
@@ -28,6 +30,8 @@ export type Project = {
 export const projects: Project[] = [
   {
     id: 14,
+    summary:
+      "ask your database a question. turn the answer into something useful.",
     name: "ryuk ai",
     date: "march, 2026",
     collabs: [],
@@ -89,7 +93,9 @@ export const projects: Project[] = [
   },
   {
     id: 13,
+    summary: "nepal’s stock exchange, wrapped in a typed python sdk.",
     name: "nepse-sdk",
+    blogHref: "/blog/reverse-engineering-nepse",
     date: "march, 2026",
     collabs: [],
     type: "sdk",
@@ -103,6 +109,8 @@ export const projects: Project[] = [
   },
   {
     id: 12,
+    summary:
+      "a conversational way to explore parcels, zoning, and land records.",
     name: "county gis rag",
     date: "march, 2026",
     collabs: [],
@@ -112,40 +120,51 @@ export const projects: Project[] = [
     links: {
       github: "https://github.com/ankurgajurel/county-gis-rag",
     },
-    technologies: ["next.js", "fastapi", "postgresql", "openai", "docker", "sqlalchemy"],
+    technologies: [
+      "next.js",
+      "fastapi",
+      "postgresql",
+      "openai",
+      "docker",
+      "sqlalchemy",
+    ],
   },
-  {
-    id: 0,
-    name: "resimator's landing page",
-    date: "march, 2024",
-    collabs: [],
-    type: "fullstack",
-    description:
-      "landing page with strapi cms, graphql, framer motion, and a custom design system",
-    content:
-      "landing page for a finnish company. built with strapi cms for content management and graphql for data fetching. uses framer motion for animations and a custom design system for consistent styling.",
-    links: {
-      demo: "https://staging.resimator.fi/",
-    },
-    technologies: ["strapi", "graphql", "framer motion", "design system"],
-  },
-  {
-    id: 1,
-    name: "a5it",
-    date: "february, 2024",
-    collabs: ["sls0n"],
-    type: "fullstack/devops",
-    description:
-      "e-commerce platform developed in collaboration with silson sapkota",
-    content:
-      "e-commerce platform for selling products online. built with modern web technologies and deployed with proper devops practices.",
-    links: {
-      demo: "https://a5it.com/",
-    },
-    technologies: ["e-commerce", "collaboration"],
-  },
+  // {
+  //   id: 0,
+  //   summary:
+  //     "a considered home on the web, with a custom design system and cms.",
+  //   name: "resimator's landing page",
+  //   date: "march, 2024",
+  //   collabs: [],
+  //   type: "fullstack",
+  //   description:
+  //     "landing page with strapi cms, graphql, framer motion, and a custom design system",
+  //   content:
+  //     "landing page for a finnish company. built with strapi cms for content management and graphql for data fetching. uses framer motion for animations and a custom design system for consistent styling.",
+  //   links: {
+  //     demo: "https://staging.resimator.fi/",
+  //   },
+  //   technologies: ["strapi", "graphql", "framer motion", "design system"],
+  // },
+  // {
+  //   id: 1,
+  //   summary: "an e-commerce platform, from storefront to cloud infrastructure.",
+  //   name: "a5it",
+  //   date: "february, 2024",
+  //   collabs: ["sls0n"],
+  //   type: "fullstack/devops",
+  //   description:
+  //     "e-commerce platform developed in collaboration with silson sapkota",
+  //   content:
+  //     "e-commerce platform for selling products online. built with modern web technologies and deployed with proper devops practices.",
+  //   links: {
+  //     demo: "https://a5it.com/",
+  //   },
+  //   technologies: ["e-commerce", "collaboration"],
+  // },
   {
     id: 2,
+    summary: "turning learning material into engaging, educational videos.",
     name: "aiprep",
     date: "nov, 2025",
     collabs: ["dipenbhat557"],
@@ -160,19 +179,17 @@ export const projects: Project[] = [
   },
   {
     id: 3,
+    summary: "a drag-and-drop builder for bringing websites to life.",
     name: "webcraft",
     date: "december, 2024",
     collabs: ["sls0n"],
     type: "fullstack",
-    content:
-      "drag-and-drop website builder tool. users can create websites without coding by dragging components and customizing them.",
-    links: {
-      demo: "https://x.com/usewebcraft",
-    },
+    blogHref: "https://x.com/usewebcraft",
     technologies: ["website builder", "collaboration"],
   },
   {
     id: 6,
+    summary: "a place to host, discover, and listen to podcasts.",
     name: "utarchadhav",
     date: "september, 2023",
     collabs: ["kirangajurel"],
@@ -187,6 +204,7 @@ export const projects: Project[] = [
   },
   {
     id: 9,
+    summary: "one place to schedule content across your social accounts.",
     name: "social media scheduler",
     date: "halted",
     collabs: ["sumansid"],
@@ -210,7 +228,10 @@ export const projects: Project[] = [
   },
   {
     id: 10,
+    summary:
+      "explore nepal through its provinces, districts, and constituencies.",
     name: "nepal atlas map",
+    blogHref: "/blog/nepal-atlas-map",
     date: "feb, 2026",
     collabs: [],
     type: "fullstack",
@@ -221,17 +242,18 @@ export const projects: Project[] = [
     },
     technologies: ["nextjs", "d3.js", "topojson", "tailwind css"],
   },
-  {
-    id: 11,
-    name: "cognistream.ai",
-    date: "july, 2025 - feb, 2026",
-    collabs: [],
-    type: "fullstack",
-    content:
-      "ai video generation tool focused on creating engaging and educational videos for students.",
-    links: {
-      demo: "https://cognistream.ai/",
-    },
-    technologies: ["nextjs", "fastapi", "inngest", "typescript", "supabase"],
-  },
+  // {
+  //   id: 11,
+  //   summary: "voice ai research and analysis platform",
+  //   name: "cognistream.ai",
+  //   date: "july, 2025 - feb, 2026",
+  //   collabs: [],
+  //   type: "fullstack",
+  //   content:
+  //     "ai video generation tool focused on creating engaging and educational videos for students.",
+  //   links: {
+  //     demo: "https://cognistream.ai/",
+  //   },
+  //   technologies: ["nextjs", "fastapi", "inngest", "typescript", "supabase"],
+  // },
 ];

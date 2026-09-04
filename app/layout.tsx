@@ -1,33 +1,21 @@
 import type { Metadata } from "next";
-import { Bodoni_Moda, Hubot_Sans, Instrument_Serif } from "next/font/google";
+import { Inter } from "next/font/google";
 import Navbar from "@/components/navbar";
 import Terminal from "@/components/terminal";
 import Footer from "@/components/footer";
-import ChatBubble from "@/components/home/chat-bubble";
-import { siteMetadata, siteConfig } from "@/config/siteConfig";
+import RoundedSelection from "@/components/portfolio/rounded-selection";
+import { siteMetadata } from "@/config/siteConfig";
 import { Analytics } from "@vercel/analytics/react";
 import { PostHogProvider, PostHogPageView } from "@posthog/next";
 import { Suspense } from "react";
-import { user } from "@/data/general";
-import { experiences } from "@/data/experience";
 import { Providers } from "@/providers";
+import { getPersonJsonLd, getWebsiteJsonLd, jsonLdGraph } from "@/lib/seo";
 import "./globals.css";
 
-const hubotSans = Hubot_Sans({
-  variable: "--font-hubot-sans",
+const inter = Inter({
+  variable: "--font-inter",
   subsets: ["latin"],
-});
-
-
-const bodoni = Bodoni_Moda({
-  variable: "--font-bodoni",
-  subsets: ["latin"],
-});
-
-const instrumentSerif = Instrument_Serif({
-  variable: "--font-instrument-serif",
-  subsets: ["latin"],
-  weight: "400",
+  display: "swap",
 });
 
 export const metadata: Metadata = siteMetadata;
@@ -37,29 +25,7 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const jsonLd = {
-    "@context": "https://schema.org",
-    "@type": "Person",
-    name: user.name,
-    jobTitle: experiences[experiences.length - 1]?.roles[0]?.title,
-    description: siteConfig.description,
-    url: siteConfig.url,
-    sameAs: [
-      siteConfig.links.linkedin,
-      siteConfig.links.twitter,
-      siteConfig.links.github,
-    ],
-    worksFor: {
-      "@type": "Organization",
-      name: experiences[experiences.length - 1]?.company,
-    },
-    address: {
-      "@type": "PostalAddress",
-      addressLocality: user.location,
-      addressCountry: user.location.split(",")[1].trim(),
-      postalCode: user.postalCode,
-    },
-  };
+  const jsonLd = jsonLdGraph([getPersonJsonLd(), getWebsiteJsonLd()]);
 
   return (
     <html lang="en" suppressHydrationWarning>
@@ -69,17 +35,25 @@ export default function RootLayout({
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
         />
       </head>
-      <body className={`${hubotSans.variable} ${bodoni.variable} ${instrumentSerif.variable} antialiased`}>
-        <PostHogProvider clientOptions={{ api_host: "/ingest", custom_campaign_params: ["ref"] }}>
+      <body
+        className={`${inter.variable} flex min-h-dvh flex-col bg-background font-sans text-[15px] leading-[1.65] tracking-[-0.018em] text-foreground lowercase antialiased`}
+      >
+        <PostHogProvider
+          clientOptions={{
+            api_host: "/ingest",
+            custom_campaign_params: ["ref"],
+          }}
+        >
           <Providers>
             <Suspense fallback={null}>
               <PostHogPageView />
             </Suspense>
+            <RoundedSelection />
             <Navbar />
-            {children}
+            <div className="min-w-0 flex-[1_0_auto]">{children}</div>
             <Footer />
             <Terminal />
-            {/* <ChatBubble /> */}
+
             <Analytics />
           </Providers>
         </PostHogProvider>

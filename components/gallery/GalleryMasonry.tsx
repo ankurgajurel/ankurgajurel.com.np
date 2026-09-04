@@ -2,6 +2,9 @@
 
 import { useCallback, useEffect, useMemo, useRef } from "react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { XIcon } from "@phosphor-icons/react/dist/ssr/X";
+import { CaretLeftIcon } from "@phosphor-icons/react/dist/ssr/CaretLeft";
+import { CaretRightIcon } from "@phosphor-icons/react/dist/ssr/CaretRight";
 import VideoPlayer from "@/components/gallery/VideoPlayer";
 import GalleryImage from "@/components/gallery/GalleryImage";
 import { getVideoPosterUrl } from "@/lib/gallery-placeholder";
@@ -64,6 +67,38 @@ export default function GalleryMasonry({
     if (activeIndex < 0 || activeIndex >= items.length - 1) return;
     openModal(activeIndex + 1);
   }, [activeIndex, items.length, openModal]);
+
+  const modalRef = useRef<HTMLDivElement>(null);
+  const modalOpen = activeItem !== null;
+  useEffect(() => {
+    if (!modalOpen) return;
+    const previous = document.activeElement;
+    const modal = modalRef.current;
+    modal?.querySelector<HTMLButtonElement>("button")?.focus();
+    const trapFocus = (event: KeyboardEvent) => {
+      if (event.key !== "Tab" || !modal) return;
+      const controls = [
+        ...modal.querySelectorAll<HTMLElement>(
+          'button:not(:disabled), a[href], video[controls], [tabindex="0"]',
+        ),
+      ];
+      const first = controls[0],
+        last = controls[controls.length - 1];
+      if (event.shiftKey && document.activeElement === first) {
+        event.preventDefault();
+        last?.focus();
+      } else if (!event.shiftKey && document.activeElement === last) {
+        event.preventDefault();
+        first?.focus();
+      }
+    };
+    window.addEventListener("keydown", trapFocus);
+    return () => {
+      window.removeEventListener("keydown", trapFocus);
+      if (previous instanceof HTMLElement && previous.isConnected)
+        previous.focus({ preventScroll: true });
+    };
+  }, [modalOpen]);
 
   // Keyboard navigation
   useEffect(() => {
@@ -134,7 +169,7 @@ export default function GalleryMasonry({
           <button
             key={`${item.type}-${item.id}-${index}`}
             type="button"
-            className="mb-3 sm:mb-4 break-inside-avoid overflow-hidden bg-gray-100 dark:bg-gray-900 relative w-full text-left cursor-zoom-in"
+            className="mb-3 sm:mb-4 rounded-3xl [corner-shape:squircle] break-inside-avoid overflow-hidden bg-card relative w-full text-left cursor-zoom-in"
             onClick={() => openModal(index)}
           >
             {item.type === "image" ? (
@@ -145,7 +180,7 @@ export default function GalleryMasonry({
                   width={800}
                   height={600}
                   sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
-                  className="w-full h-auto transition-transform duration-300 group-hover:scale-105"
+                  className="w-full h-auto transition-transform duration-250 [@media(hover:hover)]:group-hover:scale-[1.02]"
                   loading={index < eagerCount ? "eager" : "lazy"}
                   priority={index < eagerCount}
                   quality={85}
@@ -172,8 +207,11 @@ export default function GalleryMasonry({
       {/* Modal / Lightbox - uses dvh to handle mobile browser chrome */}
       {activeItem && (
         <div
-          className="fixed inset-0 z-50 bg-black flex flex-col"
-          style={{ height: "100dvh" }}
+          ref={modalRef}
+          role="dialog"
+          aria-modal="true"
+          aria-label={activeItem.caption}
+          className="fixed inset-0 h-dvh z-50 bg-black flex flex-col"
           onClick={closeModal}
           onTouchStart={handleTouchStart}
           onTouchEnd={handleTouchEnd}
@@ -189,19 +227,7 @@ export default function GalleryMasonry({
               className="p-2 text-white/80 hover:text-white transition-colors"
               aria-label="Close"
             >
-              <svg
-                className="w-6 h-6"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M6 18L18 6M6 6l12 12"
-                />
-              </svg>
+              <XIcon size={22} aria-hidden="true" />
             </button>
           </div>
 
@@ -221,19 +247,7 @@ export default function GalleryMasonry({
                 className="absolute left-1 sm:left-3 top-1/2 -translate-y-1/2 z-20 p-1.5 sm:p-2.5 bg-black/40 backdrop-blur-sm text-white/80 hover:text-white rounded-full hover:bg-black/60 transition-colors"
                 aria-label="Previous"
               >
-                <svg
-                  className="w-5 h-5 sm:w-6 sm:h-6"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M15 19l-7-7 7-7"
-                  />
-                </svg>
+                <CaretLeftIcon size={22} aria-hidden="true" />
               </button>
             )}
 
@@ -248,19 +262,7 @@ export default function GalleryMasonry({
                 className="absolute right-1 sm:right-3 top-1/2 -translate-y-1/2 z-20 p-1.5 sm:p-2.5 bg-black/40 backdrop-blur-sm text-white/80 hover:text-white rounded-full hover:bg-black/60 transition-colors"
                 aria-label="Next"
               >
-                <svg
-                  className="w-5 h-5 sm:w-6 sm:h-6"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M9 5l7 7-7 7"
-                  />
-                </svg>
+                <CaretRightIcon size={22} aria-hidden="true" />
               </button>
             )}
 

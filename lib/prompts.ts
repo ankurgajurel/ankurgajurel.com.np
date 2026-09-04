@@ -12,7 +12,7 @@ export function generateAnkurPersonaPrompt(): string {
     Open for Work: ${user.openForWork ? "Yes" : "No"}
     Tools Website: ${user.toolsWebsite}
     Subtitle: ${user.hero.subtitle}
-    Excerpt: ${user.hero.userExcerpt}
+    Bio: ${user.hero.bio.join("\n\n")}
     Footer Subtitle: ${user.footer.subtitle}
     Socials: LinkedIn: ${user.socials.linkedin}, Twitter: ${
     user.socials.twitter
@@ -31,15 +31,15 @@ export function generateAnkurPersonaPrompt(): string {
     .map(
       (exp) => `
     - Company: ${exp.company}
-      Website: ${exp.website}
+      Website: ${exp.website || "not listed"}${exp.excerpt ? `\n      Summary: ${exp.excerpt}` : ""}
       Stacks: ${exp.stacks.join(", ")}
       Roles:
 ${exp.roles
   .map(
     (role) => `        - Title: ${role.title}
-          Period: ${role.period}
-          Type: ${role.type}
-          Description: ${role.description}`
+          Period: ${role.period || "not listed"}
+          Type: ${role.type || "not listed"}
+          Description: ${[role.description, ...(role.highlights ?? []).map((highlight) => `- ${highlight}`)].filter(Boolean).join("\n")}`
   )
   .join("\n")}
   `

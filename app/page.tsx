@@ -8,6 +8,8 @@ import Blog from "@/components/home/blog";
 import HomeUtilities from "@/components/home/utilities";
 import { GithubCalendar } from "@/components/home/github";
 import { getAllPostsMeta } from "@/lib/blog";
+import { getProfilePageJsonLd } from "@/lib/seo";
+import { Suspense } from "react";
 
 export const metadata: Metadata = {
   ...siteMetadata,
@@ -29,18 +31,28 @@ export const metadata: Metadata = {
 
 export default async function Home() {
   const posts = getAllPostsMeta();
+  const jsonLd = getProfilePageJsonLd();
 
   return (
-    <main className="relative">
+    <main
+      id="main-content"
+      className="mx-auto w-[min(680px,calc(100%-40px))] pt-[74px] [@media(max-width:640px)]:pt-12"
+    >
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
       <Hero />
-      <div className="relative z-10 bg-background">
+      <>
         <HomeProjects />
-        <Skills />
         <Experience />
-        <Blog posts={posts} />
         <HomeUtilities />
-        <GithubCalendar username="ankurgajurel" />
-      </div>
+        <Blog posts={posts} />
+        <Skills />
+        <Suspense fallback={null}>
+          <GithubCalendar username="ankurgajurel" />
+        </Suspense>
+      </>
     </main>
   );
 }

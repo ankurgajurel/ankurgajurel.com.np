@@ -2,7 +2,14 @@
 
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { type FileRejection, useDropzone } from "react-dropzone";
-import { Download, FileVideo, LoaderCircle, Scissors, Upload, Volume2, VolumeX, X } from "lucide-react";
+import { DownloadSimpleIcon as Download } from "@phosphor-icons/react/dist/ssr/DownloadSimple";
+import { FileVideoIcon as FileVideo } from "@phosphor-icons/react/dist/ssr/FileVideo";
+import { CircleNotchIcon as LoaderCircle } from "@phosphor-icons/react/dist/ssr/CircleNotch";
+import { ScissorsIcon as Scissors } from "@phosphor-icons/react/dist/ssr/Scissors";
+import { UploadSimpleIcon as Upload } from "@phosphor-icons/react/dist/ssr/UploadSimple";
+import { SpeakerHighIcon as Volume2 } from "@phosphor-icons/react/dist/ssr/SpeakerHigh";
+import { SpeakerSlashIcon as VolumeX } from "@phosphor-icons/react/dist/ssr/SpeakerSlash";
+import { XIcon as X } from "@phosphor-icons/react/dist/ssr/X";
 import { ToolButton } from "@/components/tools/tool-button";
 import { ToolPanel, toolInputClassName, toolLabelClassName } from "@/components/tools/tool-shell";
 

@@ -1,9 +1,17 @@
-import { redirect } from "next/navigation";
-import { ArrowUp } from "lucide-react";
+import { notFound } from "next/navigation";
+import { ArrowLeftIcon } from "@phosphor-icons/react/dist/ssr/ArrowLeft";
+import { ArrowUpRightIcon } from "@phosphor-icons/react/dist/ssr/ArrowUpRight";
+import SiteMark from "@/components/portfolio/site-mark";
 import Link from "next/link";
 import { projects } from "@/data/projects";
 import { Metadata } from "next";
-import Button from "@/components/ui/button";
+import { siteConfig } from "@/config/siteConfig";
+import {
+  absoluteUrl,
+  getBreadcrumbJsonLd,
+  projectDescription,
+  projectKeywords,
+} from "@/lib/seo";
 
 export async function generateStaticParams() {
   return projects.map((project) => ({ id: String(project.id) }));
@@ -24,20 +32,27 @@ export async function generateMetadata({
       description: "The requested project could not be found.",
     };
 
+  const description = projectDescription(project);
+  const url = absoluteUrl(`/projects/${project.id}`);
+
   return {
     title: project.name,
-    description: project.description,
+    description,
+    keywords: projectKeywords(project),
+    alternates: {
+      canonical: url,
+    },
     openGraph: {
       title: project.name,
-      description: project.description,
+      description,
+      url,
       type: "article",
-      publishedTime: project.date,
       tags: project.technologies,
     },
     twitter: {
       card: "summary_large_image",
       title: project.name,
-      description: project.description,
+      description,
     },
   };
 }
@@ -51,140 +66,208 @@ export default async function ProjectPage({
 
   const project = projects.find((project) => project.id === id);
 
-  if (!project) redirect("/");
+  if (!project) notFound();
+
+  const description = projectDescription(project);
+  const url = absoluteUrl(`/projects/${project.id}`);
+  const links = [
+    project.links?.demo,
+    project.links?.github,
+    project.links?.docs,
+  ].filter((link): link is string => Boolean(link));
+  const jsonLd = [
+    {
+      "@context": "https://schema.org",
+      "@type": "CreativeWork",
+      "@id": `${url}#project`,
+      name: project.name,
+      description,
+      url,
+      dateCreated: project.date,
+      genre: project.type,
+      creator: {
+        "@id": `${siteConfig.url}/#person`,
+      },
+      keywords: projectKeywords(project),
+      about: projectKeywords(project),
+      sameAs: links,
+    },
+    getBreadcrumbJsonLd([
+      { name: "Home", url: siteConfig.url },
+      { name: "Projects", url: `${siteConfig.url}/projects` },
+      { name: project.name, url },
+    ]),
+  ];
 
   return (
-    <section className="container p-4 my-10 md:my-16 lg:my-20">
-      <Link href="/" className="inline-block mb-10 group">
-        <div className="flex items-center gap-2 text-sm">
-          <ArrowUp
-            size={20}
-            className="rotate-90 group-hover:-translate-x-1 transition-transform duration-300"
-          />
-          <span className="group-hover:underline">back to home</span>
-        </div>
+    <main
+      id="main-content"
+      className="mx-auto w-[min(680px,calc(100%-40px))] pt-[74px] [@media(max-width:640px)]:pt-12"
+    >
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
+      <Link
+        href="/projects"
+        className="relative inline-flex w-fit items-center gap-1.5 text-[14px]! text-secondary-foreground! after:absolute after:-bottom-px after:left-0 after:right-5 after:h-px after:origin-left after:scale-x-0 after:bg-underline after:transition-transform after:duration-[220ms] after:ease-portfolio after:content-[''] [&_svg]:transition-transform [&_svg]:duration-[220ms] [&_svg]:ease-portfolio pointer-fine:hover:after:scale-x-100 pointer-fine:hover:[&_svg]:translate-x-0.5 motion-reduce:[&_svg]:translate-none"
+      >
+        <ArrowLeftIcon size={14} />
+        all projects
       </Link>
-
-      <article className="max-w-3xl mx-auto">
-        <header className="mb-12">
-          <h1 className="text-4xl md:text-6xl font-medium mb-4">
-            {project.name}
-          </h1>
-          <div className="flex flex-col md:flex-row md:items-center gap-4 text-sm text-foreground/60">
-            <time>{project.date}</time>
-            <div className="flex flex-wrap gap-2">
-              {project.technologies?.map((tag: string) => (
-                <span
-                  key={tag}
-                  className="px-2 py-1 border-[0.5px] border-foreground hover:bg-card transition-colors duration-200"
-                >
-                  #{tag}
-                </span>
-              ))}
-            </div>
-          </div>
-        </header>
-
-        <div className="prose prose-lg dark:prose-invert max-w-none">
-          <p className="mb-6 font-light leading-relaxed">
-            {project.description}
+      <article className="mt-[38px]">
+        <header className="pb-9 [&_h1]:mt-0 [&_h1]:mb-5 [&_h1]:text-[clamp(26px,4vw,36px)] [&_h1]:font-[450] [&_h1]:leading-[1.3] [&_h1]:tracking-[-0.04em] [&_h1]:text-balance [@media(max-width:640px)]:pb-6">
+          <span className="mb-6 flex size-13 items-center justify-center rounded-[17px] bg-card [corner-shape:squircle]">
+            <SiteMark
+              url={
+                project.type === "sdk"
+                  ? project.links?.github
+                  : project.links?.demo || project.links?.github
+              }
+              name={project.name}
+              size={28}
+            />
+          </span>
+          <p className="mt-0 mb-3.5 text-[13px] text-muted-foreground flex gap-2.5">
+            {project.type} <span aria-hidden="true">/</span> {project.date}
           </p>
-
-          <div className="mt-12 mb-8 flex gap-4">
+          <h1>{project.name}</h1>
+          <p className="max-w-[590px] text-[15px] leading-[1.85] text-secondary-foreground">
+            {project.description || project.summary}
+          </p>
+          <div className="mt-6 flex flex-wrap gap-2.5">
             {project.links?.demo && (
               <a
                 href={project.links.demo}
                 target="_blank"
-                rel="noopener noreferrer"
-                className="no-underline"
+                rel="noreferrer"
+                className="inline-flex min-h-[38px] items-center gap-2.5 rounded-[13px] bg-card px-[13px] py-2 text-[13px] text-foreground [corner-shape:squircle] transition-[box-shadow,transform,scale] duration-180 ease-[ease,var(--ease),var(--ease)] pointer-fine:hover:shadow-portfolio active:scale-[0.98]"
               >
-                <Button className="group flex items-center gap-2 text-sm">
-                  <span>view demo</span>
-                  <ArrowUp
-                    size={16}
-                    className="group-hover:rotate-45 transition-transform duration-300"
-                  />
-                </Button>
+                visit website
+                <ArrowUpRightIcon size={15} />
               </a>
             )}
             {project.links?.github && (
               <a
                 href={project.links.github}
                 target="_blank"
-                rel="noopener noreferrer"
-                className="no-underline"
+                rel="noreferrer"
+                className="inline-flex min-h-[38px] items-center gap-2.5 rounded-[13px] bg-card px-[13px] py-2 text-[13px] text-foreground [corner-shape:squircle] transition-[box-shadow,transform,scale] duration-180 ease-[ease,var(--ease),var(--ease)] pointer-fine:hover:shadow-portfolio active:scale-[0.98]"
               >
-                <Button className="group flex items-center gap-2 text-sm">
-                  <span>view source</span>
-                  <ArrowUp
-                    size={16}
-                    className="group-hover:rotate-45 transition-transform duration-300"
-                  />
-                </Button>
+                source code
+                <ArrowUpRightIcon size={15} />
+              </a>
+            )}
+            {project.links?.docs && (
+              <a
+                href={project.links.docs}
+                target="_blank"
+                rel="noreferrer"
+                className="inline-flex min-h-[38px] items-center gap-2.5 rounded-[13px] bg-card px-[13px] py-2 text-[13px] text-foreground [corner-shape:squircle] transition-[box-shadow,transform,scale] duration-180 ease-[ease,var(--ease),var(--ease)] pointer-fine:hover:shadow-portfolio active:scale-[0.98]"
+              >
+                documentation
+                <ArrowUpRightIcon size={15} />
               </a>
             )}
           </div>
-
-          <p className="mb-6 font-light leading-relaxed">{project?.content}</p>
-
-          {project.workflow && project.workflow.length > 0 && (
-            <div className="mt-16 not-prose">
-              <h2 className="text-sm tracking-widest uppercase text-foreground/40 mb-6">
-                / how it works
-              </h2>
-              <div className="grid grid-cols-2 md:grid-cols-4 gap-px border border-foreground/10">
-                {project.workflow.map((step, i) => (
-                  <div
-                    key={i}
-                    className="p-4 border-r last:border-r-0 border-foreground/10"
-                  >
-                    <span className="text-xs text-foreground/30 block mb-2">
-                      {String(i + 1).padStart(2, "0")}
-                    </span>
-                    <span className="text-sm font-light">{step}</span>
-                  </div>
-                ))}
-              </div>
-            </div>
-          )}
-
-          {project.features && project.features.length > 0 && (
-            <div className="mt-16 not-prose">
-              <h2 className="text-sm tracking-widest uppercase text-foreground/40 mb-6">
-                / features
-              </h2>
-              <div className="flex flex-col gap-0">
-                {project.features.map((feature, i) => (
-                  <div
-                    key={i}
-                    className="border-b border-foreground/10 py-4 grid grid-cols-1 md:grid-cols-3 gap-2 md:gap-8"
-                  >
-                    <div className="text-sm font-normal">
-                      {feature.title}
-                    </div>
-                    <div className="md:col-span-2 text-sm font-light text-foreground/70">
-                      {feature.description}
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-          )}
-        </div>
-
-        <footer className="mt-16 pt-8 border-t border-foreground/10">
-          <Link
-            href="/#projects"
-            className="inline-flex items-center gap-2 group text-lg"
+        </header>
+        <section
+          className="mt-9 [&_h2]:mt-0 [&_h2]:mb-4 [&_h2]:text-[14px] [&_h2]:font-[450] [&_h2]:text-muted-foreground [&>p]:text-[15px] [&>p]:leading-[1.9] [&>p]:text-secondary-foreground"
+          aria-labelledby="overview-title"
+        >
+          <h2 id="overview-title">the project</h2>
+          <p>{project.content || project.description}</p>
+        </section>
+        {!!project.technologies?.length && (
+          <section
+            className="mt-9 [&_h2]:mt-0 [&_h2]:mb-4 [&_h2]:text-[14px] [&_h2]:font-[450] [&_h2]:text-muted-foreground [&>p]:text-[15px] [&>p]:leading-[1.9] [&>p]:text-secondary-foreground"
+            aria-labelledby="built-with-title"
           >
-            <ArrowUp
-              size={20}
-              className="rotate-90 group-hover:-translate-x-1 transition-transform duration-300"
-            />
-            <span className="group-hover:underline">back to projects</span>
+            <h2 id="built-with-title">built with</h2>
+            <div className="m-0 flex flex-wrap gap-[5px] [&_span]:rounded-[5px] [&_span]:bg-card [&_span]:px-[7px] [&_span]:py-0.5 [&_span]:text-[12px] [&_span]:text-secondary-foreground">
+              {project.technologies.map((tag) => (
+                <span key={tag}>{tag}</span>
+              ))}
+            </div>
+          </section>
+        )}
+        {!!project.collabs.length && (
+          <section
+            className="mt-9 [&_h2]:mt-0 [&_h2]:mb-4 [&_h2]:text-[14px] [&_h2]:font-[450] [&_h2]:text-muted-foreground [&>p]:text-[15px] [&>p]:leading-[1.9] [&>p]:text-secondary-foreground"
+            aria-labelledby="collaborators-title"
+          >
+            <h2 id="collaborators-title">built together with</h2>
+            <div className="mt-6 flex flex-wrap gap-2.5">
+              {project.collabs.map((name) => (
+                <a
+                  href={`https://github.com/${name}`}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="relative inline-flex w-fit items-center gap-1.5 text-[14px]! text-secondary-foreground! after:absolute after:-bottom-px after:left-0 after:right-5 after:h-px after:origin-left after:scale-x-0 after:bg-underline after:transition-transform after:duration-[220ms] after:ease-portfolio after:content-[''] [&_svg]:transition-transform [&_svg]:duration-[220ms] [&_svg]:ease-portfolio pointer-fine:hover:after:scale-x-100 pointer-fine:hover:[&_svg]:translate-x-0.5 motion-reduce:[&_svg]:translate-none"
+                  key={name}
+                >
+                  @{name}
+                  <ArrowUpRightIcon size={13} />
+                </a>
+              ))}
+            </div>
+          </section>
+        )}
+        {!!project.workflow?.length && (
+          <section
+            className="mt-9 [&_h2]:mt-0 [&_h2]:mb-4 [&_h2]:text-[14px] [&_h2]:font-[450] [&_h2]:text-muted-foreground [&>p]:text-[15px] [&>p]:leading-[1.9] [&>p]:text-secondary-foreground"
+            aria-labelledby="workflow-title"
+          >
+            <h2 id="workflow-title">how it works</h2>
+            <ol className="grid list-none grid-cols-4 gap-2 p-0 [&_li]:rounded-[18px] [&_li]:bg-card [&_li]:p-[17px] [&_li]:[corner-shape:squircle] [&_span]:text-[12px] [&_span]:text-muted-foreground [&_p]:mt-3 [&_p]:text-[14px] [&_p]:leading-[1.6] [@media(max-width:640px)]:grid-cols-2">
+              {project.workflow.map((step, index) => (
+                <li key={step}>
+                  <span>{String(index + 1).padStart(2, "0")}</span>
+                  <p>{step}</p>
+                </li>
+              ))}
+            </ol>
+          </section>
+        )}
+        {!!project.features?.length && (
+          <section
+            className="mt-9 [&_h2]:mt-0 [&_h2]:mb-4 [&_h2]:text-[14px] [&_h2]:font-[450] [&_h2]:text-muted-foreground [&>p]:text-[15px] [&>p]:leading-[1.9] [&>p]:text-secondary-foreground"
+            aria-labelledby="features-title"
+          >
+            <h2 id="features-title">a closer look</h2>
+            <dl className="[&>div]:grid [&>div]:grid-cols-[150px_1fr] [&>div]:gap-5 [&>div]:py-[18px] [&>div]:text-[14px] [&_dt]:text-foreground [&_dd]:leading-[1.8] [&_dd]:text-secondary-foreground [@media(max-width:640px)]:[&>div]:grid-cols-1 [@media(max-width:640px)]:[&>div]:gap-1.5">
+              {project.features.map((feature) => (
+                <div key={feature.title}>
+                  <dt>{feature.title}</dt>
+                  <dd>{feature.description}</dd>
+                </div>
+              ))}
+            </dl>
+          </section>
+        )}
+        {!!project.images?.length && (
+          <div className="mt-9 grid gap-[18px] [&_img]:w-full [&_img]:rounded-3xl [&_img]:[corner-shape:squircle]">
+            {project.images.map((image) => (
+              // eslint-disable-next-line @next/next/no-img-element
+              <img
+                key={image.src}
+                src={image.src}
+                alt={image.alt}
+                loading="lazy"
+              />
+            ))}
+          </div>
+        )}
+        <div className="mt-11 pt-[25px]">
+          <Link
+            href="/projects"
+            className="relative inline-flex w-fit items-center gap-1.5 text-[14px]! text-secondary-foreground! after:absolute after:-bottom-px after:left-0 after:right-5 after:h-px after:origin-left after:scale-x-0 after:bg-underline after:transition-transform after:duration-[220ms] after:ease-portfolio after:content-[''] [&_svg]:transition-transform [&_svg]:duration-[220ms] [&_svg]:ease-portfolio pointer-fine:hover:after:scale-x-100 pointer-fine:hover:[&_svg]:translate-x-0.5 motion-reduce:[&_svg]:translate-none"
+          >
+            <ArrowLeftIcon size={14} />
+            back to projects
           </Link>
-        </footer>
+        </div>
       </article>
-    </section>
+    </main>
   );
 }

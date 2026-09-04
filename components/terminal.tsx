@@ -3,13 +3,11 @@
 import type React from "react";
 
 import { useEffect, useRef, useState, useCallback } from "react";
-import {
-  X,
-  Minus,
-  Maximize2,
-  Volume2,
-  Terminal as TerminalIcon,
-} from "lucide-react";
+import { XIcon as X } from "@phosphor-icons/react/dist/ssr/X";
+import { MinusIcon as Minus } from "@phosphor-icons/react/dist/ssr/Minus";
+import { CornersOutIcon as Maximize2 } from "@phosphor-icons/react/dist/ssr/CornersOut";
+import { SpeakerHighIcon as Volume2 } from "@phosphor-icons/react/dist/ssr/SpeakerHigh";
+import { TerminalWindowIcon as TerminalIcon } from "@phosphor-icons/react/dist/ssr/TerminalWindow";
 import { motion, AnimatePresence } from "framer-motion";
 import { cn } from "@/lib/utils";
 import { useConsoleVisibleStore } from "@/store/console";
