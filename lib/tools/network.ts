@@ -21,7 +21,7 @@ export function parseInspectableUrl(value: string) {
   return url;
 }
 
-export function resolveUrl(base: string, value: string) { try { return new URL(value, base).href; } catch { return value; } }
+function resolveUrl(base: string, value: string) { try { return new URL(value, base).href; } catch { return value; } }
 
 export function extractMetadata(html: string, sourceUrl: string): OpenGraphData {
   const document = parse(html);

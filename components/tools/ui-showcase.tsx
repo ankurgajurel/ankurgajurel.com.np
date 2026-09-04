@@ -7,7 +7,7 @@ import Button from "@/components/ui/button";
 import { ToolButton } from "@/components/tools/tool-button";
 import { ToolPanel } from "@/components/tools/tool-shell";
 
-export function CodeSample({ code }: { code: string }) {
+function CodeSample({ code }: { code: string }) {
   const [copied, setCopied] = useState(false);
   const copy = async () => {
     await navigator.clipboard.writeText(code);

@@ -60,6 +60,7 @@ export default function HeroAvatar({
         src={src}
         width={160}
         height={160}
+        sizes={expanded ? "160px" : "80px"}
         alt={name}
         priority
       />

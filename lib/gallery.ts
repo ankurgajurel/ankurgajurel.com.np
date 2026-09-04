@@ -8,7 +8,7 @@ export interface GalleryMedia {
   isMuted?: boolean;
 }
 
-export interface GalleryFolder {
+interface GalleryFolder {
   name: string;
   cover: string;
   items: GalleryMedia[];

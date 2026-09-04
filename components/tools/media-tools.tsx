@@ -4,7 +4,6 @@ import {
   type ChangeEvent,
   type PointerEvent,
   useEffect,
-  useMemo,
   useRef,
   useState,
 } from "react";
@@ -13,7 +12,6 @@ import { EraserIcon as Eraser } from "@phosphor-icons/react/dist/ssr/Eraser";
 import { ImageIcon as ImageIcon } from "@phosphor-icons/react/dist/ssr/Image";
 import { CursorIcon as MousePointer2 } from "@phosphor-icons/react/dist/ssr/Cursor";
 import { PenNibIcon as PenLine } from "@phosphor-icons/react/dist/ssr/PenNib";
-import { UploadSimpleIcon as Upload } from "@phosphor-icons/react/dist/ssr/UploadSimple";
 import { cn } from "@/lib/utils";
 import {
   ToolPanel,

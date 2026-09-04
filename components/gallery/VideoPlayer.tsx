@@ -52,24 +52,14 @@ export default function VideoPlayer({
   const videoRef = useRef<HTMLVideoElement | null>(null);
   const containerRef = useRef<HTMLDivElement | null>(null);
   const iconTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
-  const isMuted = true;
-
   const syncMute = useCallback((video: HTMLVideoElement) => {
-    video.defaultMuted = isMuted;
-    video.muted = isMuted;
-    if (isMuted) {
-      video.volume = 0;
-    }
+    video.defaultMuted = true;
+    video.muted = true;
+    video.volume = 0;
   }, []);
 
   useEffect(() => {
-    const video = videoRef.current;
-    if (!video) return;
-
-    syncMute(video);
-  }, [syncMute]);
-
-  useEffect(() => {
+    if (observeVisibility) return;
     const video = videoRef.current;
     if (!video) return;
     syncMute(video);
@@ -78,7 +68,7 @@ export default function VideoPlayer({
       .play()
       .then(() => setIsPlaying(true))
       .catch(() => {});
-  }, [syncMute]);
+  }, [observeVisibility, syncMute]);
 
   useEffect(() => {
     if (!observeVisibility) return;
@@ -162,10 +152,10 @@ export default function VideoPlayer({
         src={item.src}
         poster={poster}
         loop
-        muted={isMuted}
-        autoPlay
+        muted
+        autoPlay={!observeVisibility}
         playsInline
-        preload="metadata"
+        preload={observeVisibility ? "none" : "metadata"}
         controls={false}
         className={
           className ??

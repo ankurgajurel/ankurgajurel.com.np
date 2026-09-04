@@ -1,4 +1,4 @@
-export type CurrencyRate = { label: string; rate: number; lastUpdated: string; isFeatured?: boolean };
+type CurrencyRate = { label: string; rate: number; lastUpdated: string; isFeatured?: boolean };
 export type CurrencyRates = Record<string, CurrencyRate>;
 
 type ForexCategory = { sell: number; item: { name: string; code: string } };
@@ -16,7 +16,7 @@ export async function getForexRates(): Promise<CurrencyRates> {
   };
 }
 
-export const TAX_BRACKETS = {
+const TAX_BRACKETS = {
   INDIVIDUAL: [{ limit: 500_000, rate: 0.01 }, { limit: 700_000, rate: 0.1 }, { limit: 1_000_000, rate: 0.2 }, { limit: 2_000_000, rate: 0.3 }, { limit: Infinity, rate: 0.36 }],
   MARRIED: [{ limit: 600_000, rate: 0.01 }, { limit: 800_000, rate: 0.1 }, { limit: 1_100_000, rate: 0.2 }, { limit: 2_000_000, rate: 0.3 }, { limit: Infinity, rate: 0.36 }],
   FOREIGN_CONTRACTOR: [{ limit: Infinity, rate: 0.05 }],

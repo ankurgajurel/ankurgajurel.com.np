@@ -39,9 +39,6 @@ const rl = readline.createInterface({
   output: process.stdout,
 });
 
-dotenv.config({ path: path.join(process.cwd(), ".env.local"), quiet: true });
-dotenv.config({ path: path.join(process.cwd(), ".env"), quiet: true });
-
 function question(prompt: string): Promise<string> {
   return new Promise((resolve) => {
     rl.question(prompt, (answer) => resolve(answer.trim()));

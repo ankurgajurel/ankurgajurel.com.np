@@ -45,6 +45,8 @@ export default function GalleryImage({
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
             src={lqip.url}
+            loading={rest.priority ? "eager" : rest.loading ?? "lazy"}
+            decoding="async"
             alt=""
             className={cn(
               "w-full h-full",

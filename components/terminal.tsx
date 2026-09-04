@@ -117,9 +117,13 @@ export default function Terminal() {
   >([]);
   const [cursorPosition, setCursorPosition] = useState(0);
   const [historyIndex, setHistoryIndex] = useState(-1);
-  const [currentTheme, setCurrentTheme] = useState<Theme>(
-    theme === "dark" ? themes["night-owl"] : themes["paper"]
-  );
+  const [themeOverride, setThemeOverride] = useState<{
+    siteTheme: string | undefined;
+    value: Theme;
+  } | null>(null);
+  const currentTheme = themeOverride && themeOverride.siteTheme === theme
+    ? themeOverride.value
+    : theme === "dark" ? themes["night-owl"] : themes["default"];
   const [isPlaying, setIsPlaying] = useState(false);
   const [volume, setVolume] = useState(5);
   const [isMinimized, setIsMinimized] = useState(false);
@@ -228,7 +232,7 @@ export default function Terminal() {
         } else if (subCommand === "set" && args[0]) {
           const themeName = args[0];
           if (themes[themeName]) {
-            setCurrentTheme(themes[themeName]);
+            setThemeOverride({ siteTheme: theme, value: themes[themeName] });
             output = [`Theme set to ${themeName}`];
           } else {
             output = [`Error: Theme '${themeName}' not found`];
@@ -444,6 +448,7 @@ export default function Terminal() {
   };
 
   useEffect(() => {
+    if (!isVisible) return;
     document.addEventListener("mousemove", handleMouseMove);
     document.addEventListener("mouseup", handleMouseUp);
 
@@ -533,8 +538,9 @@ export default function Terminal() {
       if (resizeTimeoutRef.current) {
         clearTimeout(resizeTimeoutRef.current);
       }
+      isResizingRef.current = false;
     };
-  }, [isDragging, dragOffset, isFullscreen, userHasDragged, handleMouseMove]);
+  }, [isVisible, isDragging, dragOffset, isFullscreen, userHasDragged, handleMouseMove]);
 
   useEffect(() => {
     if (terminalRef.current) {
@@ -548,10 +554,6 @@ export default function Terminal() {
       audioRef.current.play().catch(() => {});
     }
   }, [isPlaying, volume]);
-
-  useEffect(() => {
-    setCurrentTheme(theme === "dark" ? themes["night-owl"] : themes["default"]);
-  }, [theme]);
 
   const hasPlayedSound = useRef(false);
 

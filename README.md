@@ -4,13 +4,12 @@ A sleek, responsive, and highly customizable portfolio template built with Next.
 
 ## Features
 
-- AI Assistant: Integrated chat interface powered by Vercel AI SDK and OpenAI.
+- AI endpoint: Streaming responses powered by Vercel AI SDK and OpenAI at `/api/chat`.
 - Responsive Design: Fully responsive layout that looks great on desktop, tablet, and mobile.
 - Smooth Animations: Powered by Framer Motion for a premium user experience.
 - Dark Mode: Built-in theme switching with next-themes.
 - Blog & Projects: Dynamic routing for blog posts and project showcases.
-- Spotify Integration: Show what you're currently listening to.
-- Tech Stack: Next.js 16 (App Router), Tailwind CSS 4, TypeScript, Zustand, and Radix UI.
+- Tech Stack: Next.js 16 (App Router), Tailwind CSS 4, TypeScript, and Zustand.
 
 ## Tech Stack
 
@@ -21,7 +20,7 @@ A sleek, responsive, and highly customizable portfolio template built with Next.
 - State Management: [Zustand](https://github.com/pmndrs/zustand)
 - AI Integration: [Vercel AI SDK](https://sdk.vercel.ai/) & [OpenAI](https://openai.com/)
 - Database/Caching: [Upstash Redis](https://upstash.com/) (for rate limiting)
-- Icons: [Lucide React](https://lucide.dev/)
+- Icons: [Phosphor](https://phosphoricons.com/)
 
 ## Getting Started
 
@@ -51,8 +50,8 @@ OPENAI_API_KEY=your_openai_api_key
 UPSTASH_REDIS_REST_URL=your_upstash_redis_url
 UPSTASH_REDIS_REST_TOKEN=your_upstash_redis_token
 GALLERY_JSON_ENDPOINT=your_gallery_endpoint_url
-# Optional: For voice features
-NEXT_PUBLIC_VAPI_PUBLIC_KEY=your_vapi_key
+# Optional: Browser analytics (omit to disable PostHog)
+NEXT_PUBLIC_POSTHOG_KEY=phc_your_project_key
 ```
 
 ### 4. Run the development server
@@ -82,7 +81,7 @@ Update data/general.ts with your name, role, socials, and hobbies. This will upd
 - Edit data/projects.ts to showcase your work.
 - Edit data/experience.ts to list your professional history.
 - Edit data/skills.ts to highlight your technical expertise.
-- Update data/blog.ts with your latest posts.
+- Add Markdown posts under content/blog/.
 
 Any changes made here will be instantly reflected in the AI's responses through the generateAnkurPersonaPrompt utility.
 
@@ -112,3 +111,15 @@ Distributed under the MIT License. See LICENSE for more information.
 ---
 
 Built by [Ankur Gajurel](https://github.com/ankurgajurel)
+
+## Checks and bundle size
+
+```bash
+bun run lint
+bun run typecheck
+bun test
+bun run build
+bun run size
+```
+
+`size` reads the production build and reports all emitted JavaScript/CSS plus initial JavaScript for each prerendered route. It excludes legacy `nomodule` scripts from modern browser route totals. These are gzip estimates, not measurements of a deployed CDN. See [the performance audit](PERFORMANCE.md) for the baseline, changes, and remaining issues.

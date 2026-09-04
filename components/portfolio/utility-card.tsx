@@ -7,8 +7,10 @@ export default function UtilityCard({ utility }: { utility: Utility }) {
   const parsed = new URL(utility.url, "https://ankurgajurel.com.np");
   const github = parsed.hostname === "github.com";
   const external = !utility.url.startsWith("/");
+  // FFmpeg needs isolation headers from a full document navigation.
+  const CardLink = utility.url === "/tools/trimmer" ? "a" : Link;
   return (
-    <Link
+    <CardLink
       href={utility.url}
       target={external ? "_blank" : undefined}
       rel={external ? "noreferrer" : undefined}
@@ -34,6 +36,6 @@ export default function UtilityCard({ utility }: { utility: Utility }) {
         {github && <i />}
         {github ? utility.language.toLowerCase() : "in your browser"}
       </span>
-    </Link>
+    </CardLink>
   );
 }

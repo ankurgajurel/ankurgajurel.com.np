@@ -16,6 +16,7 @@ const links = [
 
 export default function Navbar() {
   const pathname = usePathname();
+  const NavLink = pathname === "/tools/trimmer" ? "a" : Link;
   const { isVisible, setIsVisible } = useConsoleVisibleStore();
   return (
     <>
@@ -27,13 +28,13 @@ export default function Navbar() {
       </a>
       <header className="sticky top-0 z-40 shrink-0 bg-background/88 backdrop-blur-[16px]">
         <div className="m-auto flex min-h-[82px] w-[min(800px,calc(100%-40px))] items-center gap-[42px] [@media(max-width:640px)]:grid [@media(max-width:640px)]:grid-cols-[1fr_auto] [@media(max-width:640px)]:gap-0 [@media(max-width:640px)]:pt-[9px]">
-          <Link
+          <NavLink
             href="/"
             className="py-1.5 pr-1 text-[22px] font-[550] tracking-[-0.08em] [&_span]:text-muted-foreground [@media(max-width:640px)]:w-fit"
             aria-label="ankur gajurel — home"
           >
             ag<span>.</span>
-          </Link>
+          </NavLink>
           <nav
             className="flex items-center gap-[25px] [@media(max-width:640px)]:col-span-full [@media(max-width:640px)]:row-start-2 [@media(max-width:640px)]:justify-between [@media(max-width:640px)]:gap-4"
             aria-label="main navigation"
@@ -44,14 +45,14 @@ export default function Navbar() {
                   ? pathname === "/" || pathname === "/demo"
                   : pathname.startsWith(href);
               return (
-                <Link
+                <NavLink
                   key={href}
                   href={href}
                   aria-current={active ? "page" : undefined}
                   className="relative py-3.5 text-[14px] leading-[1.4] text-muted-foreground transition-[color] duration-160 ease-[ease] after:absolute after:bottom-3.5 after:left-0 after:h-px after:w-full after:origin-left after:scale-x-0 after:bg-underline after:transition-transform after:duration-200 after:ease-portfolio after:content-[''] aria-[current=page]:text-foreground aria-[current=page]:after:scale-x-100 pointer-fine:hover:text-foreground pointer-fine:hover:after:scale-x-100 [@media(max-width:640px)]:pt-2.5 [@media(max-width:640px)]:pb-[15px] [@media(max-width:640px)]:after:bottom-[15px]"
                 >
                   {label}
-                </Link>
+                </NavLink>
               );
             })}
           </nav>
