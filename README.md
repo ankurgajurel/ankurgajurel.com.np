@@ -122,4 +122,4 @@ bun run build
 bun run size
 ```
 
-`size` reads the production build and reports all emitted JavaScript/CSS plus initial JavaScript for each prerendered route. It excludes legacy `nomodule` scripts from modern browser route totals. These are gzip estimates, not measurements of a deployed CDN. See [the performance audit](PERFORMANCE.md) for the baseline, changes, and remaining issues.
+`size` reads the production build and reports all emitted JavaScript/CSS plus initial JavaScript for each prerendered route. It excludes legacy `nomodule` scripts from modern browser route totals. These are gzip estimates, not measurements of a deployed CDN. See [the performance audit](docs/performance.md) for the baseline, changes, and remaining issues.
